@@ -1,5 +1,6 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
+import { NextUIProvider } from '@nextui-org/react';
 import './styles.css';
 import { APIClient } from '@tara/api-client-ts';
 import { useEffect } from 'react';
@@ -16,14 +17,9 @@ function CustomApp({ Component, pageProps }: AppProps) {
 	})
 	
 	return (
-		<>
-			<Head>
-				<title>Welcome to admin-test!</title>
-			</Head>
-			<main className="app">
-				<Component {...pageProps} />
-			</main>
-		</>
+	  <NextUIProvider>
+		<Component {...pageProps} />
+	  </NextUIProvider>
 	);
 }
 

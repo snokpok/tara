@@ -61,6 +61,7 @@
     "vitest": "^0.25.8"
   },
   "dependencies": {
+    "@nextui-org/react": "^1.0.0-beta.12",
     "axios": "^1.0.0",
     "bcrypt": "^5.1.0",
     "cohere": "^1.1.1",
