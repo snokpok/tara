@@ -28,7 +28,7 @@ client.on("messageCreate", async (message: Discord.Message<boolean>) => {
     const question = args.join(" ");
     const params = { question: question };
     const result = await fetch(`localhost:3333/chat`, {
-      method: "GET",
+      method: "POST",
       headers : {
         "Content-Type": "application/json",
       },
