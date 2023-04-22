@@ -1,26 +1,23 @@
-import styles from './navbar.module.css';
+// import styles from './navbar.module.css';
 import Link from 'next/link';
+import { Navbar, Text } from "@nextui-org/react";
 
-const Navbar = () => {
-	return (
-		<div className={styles.navbar}>
-			<div>
-				<a className="">insert Tara logo</a>
-				<div className="navlinks">
-					<ul className={styles.list}>
-						<li>
-							<Link href="/classes">Classes</Link>
-						</li>
-						<li>
-							<Link href="/analytics">Analytics</Link>
-						</li>
-						<li>
-							<Link href="/settings">Settings</Link>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
+const navbar = () => 
+{
+	return(
+		<Navbar variant="sticky">
+			<Navbar.Brand>
+				<Link href="/">
+					<Text weight="bold"> Tara.AI </Text>
+				</Link>
+			</Navbar.Brand>
+			<Navbar.Content>
+				<Navbar.Link href="#"> Classes </Navbar.Link>
+				<Navbar.Link href="#"> Analytics </Navbar.Link>
+			</Navbar.Content>
+		</Navbar>
+
 	);
 };
-export default Navbar;
+
+export default navbar;

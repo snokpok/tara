@@ -18,6 +18,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
 	
 	return (
 	  <NextUIProvider>
+		<Navbar/>
 		<Component {...pageProps} />
 	  </NextUIProvider>
 	);
