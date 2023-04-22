@@ -8,7 +8,7 @@ import knex from 'knex';
 import { TokenRepo, UserRepo } from './repo';
 import {} from '@tara/api-client-ts';
 import { pwdSame } from './utils';
-import { answerQuestion } from './ai';
+import { answerQuestion, getClassTopics } from './ai';
 
 const client = knex({
 	client: 'mysql',
@@ -41,15 +41,26 @@ app.post('/auth/login', async (req, res) => {
 
 app.post('/chat', async (req,res) => {
 	const question = req.body.question;
+	const option = req.query.option;
 	if(!question) {
 		return res.status(400).json({message: "Must provide question"})
 	}
-	try {
-		const ans = await answerQuestion(question as string);
-		return res.json({data: ans});
-	} catch (e) {
-		console.error(e);
-		return res.status(500).json({error: e});
+	if(!option) {
+		try {
+			const ans = await answerQuestion(question as string);
+			return res.json({data: ans});
+		} catch (e) {
+			console.error(e);
+			return res.status(500).json({error: e});
+		}
+	} else if(option==="TOPICS") {
+		try {
+			const ans = await getClassTopics(question as string);
+			return res.json({data: ans});
+		} catch (e) {
+			console.error(e);
+			return res.status(500).json({error: e});
+		}
 	}
 });
 
