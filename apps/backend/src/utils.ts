@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import {hash} from 'bcrypt'
+import {compare, hash} from 'bcrypt'
 
 export const TABLENAMES = {
 	users: 'users',
@@ -13,7 +13,7 @@ export const COLNAMES = {
 		pwdhash: "pwdhash"
 	},
 	accessTokens: {
-		token: 'value',
+		value: 'value',
 		userId: 'user_id',
 	}
 }
@@ -23,11 +23,10 @@ export const generateAccessToken = () => {
 };
 
 export const hashPwd = async (pwd: string): Promise<string> => {
-	// TODO: do hashing
 	const hashed =await hash(pwd, 10);
 	return hashed;
 };
 
 export const pwdSame = async (h: string, p: string): Promise<boolean> => {
-	return await hashPwd(p) === h;
+	return await compare(p,h);
 };

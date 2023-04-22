@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { User, UserId } from './models';
+import { AccessToken, User, UserId } from './models';
 import { COLNAMES, TABLENAMES, generateAccessToken, hashPwd } from './utils';
 import { ATFilterRequest, UserFilterRequest } from './daos';
 
@@ -11,14 +11,14 @@ export class UserRepo extends AbstractRepo {
 	colnames = COLNAMES.users;
 	async createUser(email: string, pwd: string): Promise<User> {
 		const user = new User();
-		const password = await hashPwd(pwd);
+		const pwdhash = await hashPwd(pwd);
 		const res = await this.client
-			.insert({ email, password })
+			.insert({ email, pwdhash })
 			.into(TABLENAMES.users);
 		if (res.length === 0) return null;
 		user.id = res[0];
 		user.email = email;
-		user.pwdhash = password;
+		user.pwdhash = pwdhash;
 		return user;
 	}
 	async findUser(filter: UserFilterRequest): Promise<User> {
@@ -46,23 +46,26 @@ export class TokenRepo extends AbstractRepo {
 	async createAccessTokenForUser(userId: UserId): Promise<string> {
 		const tok = generateAccessToken();
 		await this.client
-			.insert({ [this.colnames.token]: tok, [this.colnames.token]: userId })
+			.insert({ [this.colnames.value]: tok, [this.colnames.userId]: userId })
 			.into(TABLENAMES.accessTokens);
 		return tok;
 	}
-	async findAccessToken(filter: ATFilterRequest): Promise<string> {
+	async findAccessToken(filter: ATFilterRequest): Promise<AccessToken> {
 		let q = this.client
-			.select(this.colnames.userId, this.colnames.token)
+			.select(this.colnames.userId, this.colnames.value)
 			.from(TABLENAMES.accessTokens);
 		if (filter.token) {
-			q = q.where(this.colnames.token, filter.token);
+			q = q.where(this.colnames.value, filter.token);
 		}
 		if (filter.userId) {
 			q = q.where(this.colnames.userId, filter.userId);
 		}
 		const res = await q;
 		if (res.length === 0) return null;
-		return res[0][this.colnames.token];
+		const ato = new AccessToken();
+		ato.userId = res[0][this.colnames.userId];
+		ato.value = res[0][this.colnames.value];
+		return ato
 	}
 }
 
