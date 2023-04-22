@@ -1,4 +1,4 @@
-import { UserId } from './models';
+import {UserId} from '@tara/types'
 
 export class ATFilterRequest {
 	userId?: UserId;

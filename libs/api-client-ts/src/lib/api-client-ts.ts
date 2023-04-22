@@ -1,4 +1,5 @@
 import axios, { Axios } from "axios";
+import {ArtifactType} from '@tara/types'
 
 export class APIClient {
 	url: string
@@ -18,7 +19,7 @@ export class APIClient {
 		})
 	}
 	async metrics(): Promise<{error?: any}> {
-		const res = await axios.post(`${this.url}/metrics`);
+		const res = await axios.get(`${this.url}/metrics`);
 		if(res.status>=400) {
 			return {error: res.data.error}
 		}
@@ -42,13 +43,26 @@ export class APIClient {
 		}
 		return {accessToken: res.data.accessToken};
 	}
-	// async createCourse(name: string): Promise<{id?: number, error?: any}> {
-	// 	const res = await axios.post(`${this.url}/classes`, {
-	// 		data: {name}
-	// 	});
-	// 	if(res.status>=400) {
-	// 		return {error: res.data.error}
-	// 	}
-	// 	return {id: res.data.id};
-	// }
+	async createCourse(name: string): Promise<{id?: number, error?: any}> {
+		const res = await axios.post(`${this.url}/classes`, {
+			data: {name}
+		});
+		if(res.status>=400) {
+			return {error: res.data.error}
+		}
+		return {id: res.data.id};
+	}
+	async addCourseArtifact(courseId: string, type: ArtifactType, name: string, solution?: string): Promise<{id?: number, error?: any}> {
+		const res = await axios.post(`${this.url}/classes/${courseId}/artifacts`, {
+			data: {
+				type,
+				name,
+				solution,
+			}
+		});
+		if(res.status>=400) {
+			return {error: res.data.error}
+		}
+		return {id: res.data.id};
+	}
 }

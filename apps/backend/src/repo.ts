@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { AccessToken, User, UserId } from './models';
+import { AccessToken, User, UserId } from '@tara/types';
 import { COLNAMES, TABLENAMES, generateAccessToken, hashPwd } from './utils';
 import { ATFilterRequest, UserFilterRequest } from './daos';
 
@@ -71,5 +71,5 @@ export class TokenRepo extends AbstractRepo {
 
 
 export class ArtifactRepo extends AbstractRepo{
-	
+
 }

@@ -7,6 +7,7 @@ import { answerQuestion, getClassTopics, tokenizeQuestion } from './ai';
 import morgan from 'morgan';
 import { Middlewares } from './mws';
 import { config } from 'dotenv';
+import cors from 'cors'
 
 config();
 
@@ -20,6 +21,8 @@ const tokenRepo = new TokenRepo(client);
 const mws = new Middlewares(tokenRepo);
 
 const app = express();
+
+app.use(cors())
 
 app.use(express.json());
 app.use(morgan('dev'));
