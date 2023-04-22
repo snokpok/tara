@@ -1,20 +1,18 @@
-import { Button, Container, Text } from '@nextui-org/react';
-import ClassCard from '../components/classcard';
+import { Button, Container, Grid, Text } from '@nextui-org/react';
+import CourseCard from '../components/coursecard';
+
+import {APIClient} from "@tara/api-client-ts"
+const client = new APIClient("https://localhost:3333")
 
 export function Course() {
-	/*
-	 * Replace the elements below with your own.
-	 *
-	 * Note: The corresponding styles are in the ./index.css file.
-	 */
 	return (
-		<Container fluid>
-			<Text h1>Your Class</Text>
+		<>
+			<Text h1>Insert Course Name</Text>
 			<Text h2>Coming Up</Text>
-			<ClassCard></ClassCard>
+			<CourseCard></CourseCard>
 			<Button>Add an assignment</Button>
 			<Text h2>Completed</Text>
-		</Container>
+		</>
 	);
 }
 
