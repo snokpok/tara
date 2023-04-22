@@ -39,7 +39,7 @@ app.post('/auth/login', async (req, res) => {
 	return res.status(401).json({ message: 'UNAUTHORIZED' });
 });
 
-app.get('/chat', async (req,res) => {
+app.post('/chat', async (req,res) => {
 	const question = req.body.question;
 	if(!question) {
 		return res.status(400).json({message: "Must provide question"})
