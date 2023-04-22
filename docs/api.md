@@ -125,13 +125,13 @@ extracted artifacts and the attachments that it got detected from)
 
 (points from 1-8; 8 being potentially really hard)
 
-- [ ] (DISMISSIBLE IF WE PURSUE MANUAL ADDING) PDF extraction works (can go from user -> plain text) {3}
+<!-- - [ ] (DISMISSIBLE IF WE PURSUE MANUAL ADDING) PDF extraction works (can go from user -> plain text) {3}
 - [ ] (DISMISSIBLE IF WE PURSUE MANUAL ADDING) Extracting artifacts from syllabus plaintext {6}
-- [ ] (DISMISSIBLE IF WE PURSUE MANUAL ADDING) Can extract relevant topics from syllabus plaintext {4}
+- [ ] (DISMISSIBLE IF WE PURSUE MANUAL ADDING) Can extract relevant topics from syllabus plaintext {4} -->
 - [ ] Classifying user chat question into an artifact {4}
 - [ ] Can extract relevant topics from user chat question (would use the
       extracted class topics from syllabus) {5}
-- [ ] (DISMISSIBLE IF WE PURSUE MANUAL ADDING) Can extract nested questions and solutions (an artifact tree)
+<!-- - [ ] (DISMISSIBLE IF WE PURSUE MANUAL ADDING) Can extract nested questions and solutions (an artifact tree) -->
 - [ ] Can reference existing artifacts and their solutions to form tangible hints {8}
 
 - [ ] Sentiment analysis on the chat logs {5}
@@ -143,6 +143,9 @@ extracted artifacts and the attachments that it got detected from)
 - [ ] Implement and test auth UI
 - [ ] CRUD on classes API {2}
 - [ ] classes UI {2}
+
+- [ ] artifacts API {3}
+- [ ] prod DB setup {2}
 
 NOTE: we could pursue 2) instead of 1) first to test out that it can reference
 existing solutions

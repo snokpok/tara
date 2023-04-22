@@ -3,14 +3,16 @@ import type { Knex } from "knex";
 // Update with your config settings.
 require('dotenv').config();
 
+const client = "pg"
+
 const config: { [key: string]: Knex.Config } = {
   development: {
-    client: "mysql",
+    client,
     connection: process.env.DATABASE_URL,
   },
 
   staging: {
-    client: "mysql",
+    client,
     connection: process.env.DATABASE_URL,
     pool: {
       min: 2,
@@ -22,7 +24,7 @@ const config: { [key: string]: Knex.Config } = {
   },
 
   production: {
-    client: "mysql",
+    client,
     connection: process.env.DATABASE_URL,
     pool: {
       min: 2,

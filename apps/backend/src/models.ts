@@ -10,3 +10,11 @@ export class AccessToken {
 	value: string;
 	userId: UserId;
 }
+
+export type ArtifactType = 'QUESTION'| 'PROJECT'| 'LAB'| 'EXAM'; // TODO: more?
+
+export class Artifact {
+	id: number;
+	type: ArtifactType;
+	name: string;
+}

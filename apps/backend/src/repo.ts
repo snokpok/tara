@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 import { User, UserId } from './models';
-import { TABLENAMES, generateAccessToken, hashPwd } from './utils';
+import { COLNAMES, TABLENAMES, generateAccessToken, hashPwd } from './utils';
 import { ATFilterRequest, UserFilterRequest } from './daos';
 
 abstract class AbstractRepo {
@@ -8,9 +8,10 @@ abstract class AbstractRepo {
 }
 
 export class UserRepo extends AbstractRepo {
+	colnames = COLNAMES.users;
 	async createUser(email: string, pwd: string): Promise<User> {
 		const user = new User();
-		const password = hashPwd(pwd);
+		const password = await hashPwd(pwd);
 		const res = await this.client
 			.insert({ email, password })
 			.into(TABLENAMES.users);
@@ -41,10 +42,7 @@ export class UserRepo extends AbstractRepo {
 }
 
 export class TokenRepo extends AbstractRepo {
-	colnames = {
-		token: 'token',
-		userId: 'user_id',
-	};
+	colnames = COLNAMES.accessTokens;
 	async createAccessTokenForUser(userId: UserId): Promise<string> {
 		const tok = generateAccessToken();
 		await this.client
@@ -66,4 +64,9 @@ export class TokenRepo extends AbstractRepo {
 		if (res.length === 0) return null;
 		return res[0][this.colnames.token];
 	}
+}
+
+
+export class ArtifactRepo {
+
 }

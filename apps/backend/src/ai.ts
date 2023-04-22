@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import cohere from 'cohere-ai';
 import { Configuration, OpenAIApi } from 'openai';
 
 dotenv.config();
@@ -7,6 +8,9 @@ dotenv.config();
 const openai = new OpenAIApi(
 	new Configuration({ apiKey: process.env.OPENAI_KEY })
 );
+
+// establishing the cohere API
+cohere.init(process.env.COHERE_KEY)
 
 // Setting values for the prompt and message to be used in the GPT-3 and GPT-3.5-Turbo
 export const answerQuestion = async (question: string): Promise<string> => {
@@ -57,6 +61,19 @@ export const getClassTopics = async (question: string): Promise<string[]> => {
 
 	return [response.data.choices[0].text];
 };
+
+export const tokenizeQuestion = async (question: string) => {
+	try {
+		const response = await cohere.tokenize({
+			text: question,
+		}).then(result => {
+			return result.body;
+		});
+		return response
+	} catch (e) {
+		console.log(`Error: ${e}`);
+	}
+}
 
 //			Note: you may only choose 3 from the following topics that are most related to the question:
 			// 

@@ -3,7 +3,7 @@ import { TokenRepo } from './repo';
 
 export class Middlewares {
 	constructor(private readonly tokenRepo: TokenRepo) {}
-	async authorized() {
+	authorizedFactory() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			const token = req.headers.authorization;
 			if ((await this.tokenRepo.findAccessToken({ token })) !== null) {
