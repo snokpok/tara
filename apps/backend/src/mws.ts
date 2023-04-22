@@ -5,12 +5,12 @@ export class Middlewares {
 	constructor(private readonly tokenRepo: TokenRepo) {}
 	authorizedFactory() {
 		return async (req: Request, res: Response, next: NextFunction) => {
-			const token = req.headers.authorization;
-			if ((await this.tokenRepo.findAccessToken({ token })) !== null) {
-				next();
-				return;
+			const token = req.headers.authorization.replace('Bearer','').trim();
+			const at = await this.tokenRepo.findAccessToken({ token });
+			if(!token || at === null) {
+				return res.status(401).json({ message: 'UNAUTHORIZED' });
 			}
-			return res.status(401).json({ message: 'UNAUTHORIZED' });
+			next();
 		};
 	}
 }

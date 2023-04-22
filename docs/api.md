@@ -89,9 +89,7 @@ extracted artifacts and the attachments that it got detected from)
 
 - Some stats: 
   - Overall sentiment on the course
-  - Sentiment on certain assignments
   - Most frustrated topics (i.e the one most asked about)
-  - Most asked questions by students
 - NOTE: stats should be recalculated every time there's a chat message per the
   general flow
 
@@ -139,7 +137,7 @@ extracted artifacts and the attachments that it got detected from)
       basic stats) {}
 - [ ] Implement analytics UI
 
-- [ ] Implement and test auth API
+- [x] Implement and test auth API
 - [ ] Implement and test auth UI
 - [ ] CRUD on classes API {2}
 - [ ] classes UI {2}

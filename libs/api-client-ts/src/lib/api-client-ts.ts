@@ -19,7 +19,7 @@ export class APIClient {
 		this.axios = axios.create({
 			baseURL: this.url,
 			headers: {
-				Authorization: token,
+				Authorization: `Bearer ${token}`,
 			}
 		})
 	}
