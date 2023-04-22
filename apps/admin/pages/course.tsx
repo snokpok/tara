@@ -1,7 +1,7 @@
-import { Button,  Container, Text } from '@nextui-org/react';
+import { Button, Container, Text } from '@nextui-org/react';
 import ClassCard from '../components/classcard';
 
-export function Classes() {
+export function Course() {
 	/*
 	 * Replace the elements below with your own.
 	 *
@@ -9,13 +9,13 @@ export function Classes() {
 	 */
 	return (
 		<Container fluid>
-			<Text h1>Your Courses</Text>
-			<Text h2>Spring 2023</Text>
-      <ClassCard></ClassCard>
-      <Button>Add a class</Button>
+			<Text h1>Your Class</Text>
+			<Text h2>Coming Up</Text>
+			<ClassCard></ClassCard>
+			<Button>Add an assignment</Button>
 			<Text h2>Completed</Text>
 		</Container>
 	);
 }
 
-export default Classes;
+export default Course;
