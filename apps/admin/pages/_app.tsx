@@ -1,19 +1,14 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
+import { NextUIProvider } from '@nextui-org/react';
 import './styles.css';
-import Navbar from '../components/navbar.tsx';
+import Navbar from '../components/navbar';
 
 function CustomApp({ Component, pageProps }: AppProps) {
 	return (
-		<>
-			<Head>
-				<title>Welcome to admin-test!</title>
-			</Head>
-			<Navbar />
-			<main className="app">
-				<Component {...pageProps} />
-			</main>
-		</>
+	  <NextUIProvider>
+		<Component {...pageProps} />
+	  </NextUIProvider>
 	);
 }
 
