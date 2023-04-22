@@ -4,6 +4,8 @@ import {compare, hash} from 'bcrypt'
 export const TABLENAMES = {
 	users: 'users',
 	accessTokens: 'access_tokens',
+	artifacts: "artifacts", 
+	artifactTrees: "artifact_trees"
 };
 
 export const COLNAMES = {
@@ -15,6 +17,17 @@ export const COLNAMES = {
 	accessTokens: {
 		value: 'value',
 		userId: 'user_id',
+	},
+	artifacts: {
+		id: "id",
+		type: "type",
+		name: "name",
+		solution: "solution",
+	},
+	artifactTrees: {
+		id: "id",
+		parentId: "parent_id", 
+		childId: "child_id",
 	}
 }
 
