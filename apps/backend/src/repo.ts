@@ -70,6 +70,6 @@ export class TokenRepo extends AbstractRepo {
 }
 
 
-export class ArtifactRepo {
-
+export class ArtifactRepo extends AbstractRepo{
+	
 }

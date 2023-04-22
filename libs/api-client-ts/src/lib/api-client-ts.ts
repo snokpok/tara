@@ -9,12 +9,6 @@ export class APIClient {
 			baseURL: url,
 		})
 	}
-	async register(email: string, password: string): Promise<{accessToken: string}> {
-		const res = await axios.get(`${this.url}/auth/register`, {
-			data: {email, password}
-		});
-		return res.data.accessToken;
-	}
 	setAccessToken(token: string) {
 		this.axios = axios.create({
 			baseURL: this.url,
@@ -23,4 +17,31 @@ export class APIClient {
 			}
 		})
 	}
+	async register(email: string, password: string): Promise<{accessToken?: string, error?: any | null}> {
+		const res = await axios.post(`${this.url}/auth/register`, {
+			data: {email, password}
+		});
+		if(res.status>=400) {
+			return {error: res.data.error}
+		}
+		return {accessToken: res.data.accessToken};
+	}
+	async login(email: string, password: string): Promise<{accessToken?: string, error?: any}> {
+		const res = await axios.post(`${this.url}/auth/login`, {
+			data: {email, password}
+		});
+		if(res.status>=400) {
+			return {error: res.data.error}
+		}
+		return {accessToken: res.data.accessToken};
+	}
+	// async createCourse(name: string): Promise<{id?: number, error?: any}> {
+	// 	const res = await axios.post(`${this.url}/classes`, {
+	// 		data: {name}
+	// 	});
+	// 	if(res.status>=400) {
+	// 		return {error: res.data.error}
+	// 	}
+	// 	return {id: res.data.id};
+	// }
 }
