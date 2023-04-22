@@ -17,7 +17,14 @@ export class APIClient {
 			}
 		})
 	}
-	async register(email: string, password: string): Promise<{accessToken?: string, error?: any | null}> {
+	async metrics(): Promise<{error?: any}> {
+		const res = await axios.post(`${this.url}/metrics`);
+		if(res.status>=400) {
+			return {error: res.data.error}
+		}
+		return {};
+	}
+	async register(email: string, password: string): Promise<{accessToken?: string, error?: any}> {
 		const res = await axios.post(`${this.url}/auth/register`, {
 			data: {email, password}
 		});
