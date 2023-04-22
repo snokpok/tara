@@ -27,7 +27,7 @@ client.on("messageCreate", async (message: Discord.Message<boolean>) => {
   if (command === 'ask') {
     const question = args.join(" ");
     const params = { question: question };
-    const result = await fetch(`localhost:3333/chat`, {
+    const result = await fetch(`http://localhost:3333/chat`, {
       method: "POST",
       headers : {
         "Content-Type": "application/json",
@@ -36,7 +36,7 @@ client.on("messageCreate", async (message: Discord.Message<boolean>) => {
     }).then(response => {
       return response.json();
     })
-    message.reply(`${result}`)
+    message.reply(`${result.data}`)
   }
 
   //
