@@ -8,7 +8,7 @@
 
 1. Install `nx` globally via `npm i -g nx`
 2. `npm i` to install all deps
-3. `nx serve admin` to run the admin; `nx serve api` to serve the API, `discord-bot` for the bot etc...
+3. `nx serve admin` to run the admin; `nx serve backend` to serve the API, `discord-bot` for the bot etc...
 
 ## Understand this workspace
 
