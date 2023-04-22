@@ -7,13 +7,13 @@ const navbar = () =>
 	return(
 		<Navbar variant="sticky">
 			<Navbar.Brand>
-				<Link href="/">
+				<Link href="/classes">
 					<Text weight="bold"> Tara.AI </Text>
 				</Link>
 			</Navbar.Brand>
 			<Navbar.Content>
-				<Navbar.Link href="#"> Classes </Navbar.Link>
-				<Navbar.Link href="#"> Analytics </Navbar.Link>
+				<Navbar.Link href="/classes"> Classes </Navbar.Link>
+				<Navbar.Link href="/analytics"> Analytics </Navbar.Link>
 			</Navbar.Content>
 		</Navbar>
 

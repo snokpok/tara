@@ -1,8 +1,8 @@
-import { Badge, Card, Text } from '@nextui-org/react';
+import { Badge, Card, Text, Link } from '@nextui-org/react';
 
-const ClassCard = () => {
+const CourseCard = () => {
 	return (
-		<Card>
+		<Card isHoverable variant="shadow">
 			<Card.Body>
 				<Text>HW 6: Hash Tables</Text>
 				<Text>The date</Text>
@@ -11,4 +11,4 @@ const ClassCard = () => {
 		</Card>
 	);
 };
-export default ClassCard;
+export default CourseCard;
