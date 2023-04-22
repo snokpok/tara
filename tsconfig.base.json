@@ -15,7 +15,7 @@
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
-			"@tara/api-client": ["libs/api-client/src/index.ts"]
+			"@tara/api-client-ts": ["libs/api-client-ts/src/index.ts"]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]
