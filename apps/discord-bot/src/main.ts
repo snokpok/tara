@@ -14,6 +14,8 @@ client.login(process.env.DISCORD_TOKEN);
 const prefix = '$';
 
 // initializing Discord bot settings
+const CLASS_1 = "1098718327393759303"
+const CLASS_8 = "1099660606849695814"
 
 
 // creating a Discord Listener for every message
@@ -23,6 +25,23 @@ client.on('messageCreate', async (message: Discord.Message<boolean>) => {
 	const commandBody = message.content.slice(prefix.length);
 	const args = commandBody.split(' ');
 	const command = args.shift().toLowerCase();
+  let guildId;
+
+  if(message.guild) {
+    guildId = message.guild.id
+    let class_id;
+    if(guildId === CLASS_1) {
+      class_id = 1
+    }
+    else {
+      class_id = 8
+    }
+    const params = {
+      class_id: class_id,
+      message: message.content
+    }
+    await axios.post('http://localhost:6363/message', params, {validateStatus: () => true});
+  }
 
 	// test command to figure out what each element would mean
 	if (command === 'test') {
@@ -33,13 +52,10 @@ client.on('messageCreate', async (message: Discord.Message<boolean>) => {
 
 	// simple ask a question, get a response
 	if (command === 'ask') {
-    const CLASS_1 = "1098718327393759303"
-    const CLASS_8 = "1099660606849695814"
 		const question = args.join(' ');
 		const params = { question: question };
     let result
     if(message.guild) {
-      const guildId = message.guild.id;
       if (guildId === CLASS_1) {
         result = await axios.post(`http://localhost:3333/chat?courseId=1`, params, {validateStatus: () => true});
         const topic_params = { solution: result.data.data, class_id: 1 }
@@ -53,7 +69,7 @@ client.on('messageCreate', async (message: Discord.Message<boolean>) => {
       await message.reply(`${result.data.data}`)
     }
   }
-}
+});
 
   // if (command === 'setupAnalytics') {
   //   const topics = []
@@ -137,4 +153,3 @@ client.on('messageCreate', async (message: Discord.Message<boolean>) => {
   //     });
   //   }
   //
-});

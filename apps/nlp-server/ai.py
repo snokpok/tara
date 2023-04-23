@@ -8,6 +8,7 @@ from datasets import load_dataset
 from annoy import AnnoyIndex
 from sklearn.cluster import DBSCAN
 from sklearn.metrics.pairwise import cosine_similarity
+from cohere.responses.classify import Example
 import supabase
 
 load_dotenv()
@@ -50,12 +51,40 @@ def train_question_model():
 
 
 # train_question_model()
-def classify_message(message):
-    class_id = 1
-    response = co.classify(model="sentiment", inputs=[{"text": message}])
-    result = response.json()
-    sentiment = result['result'][0]
-    print(f"Sentiment: {sentiment}")
+# NOTE FOR WHOEVER IS READING!!!
+# I really wanted to use Cohere's model, but I started training it on a dataset w/ 1.6 million data points and it is genuinely taking forever
+# This is just a wrap-around using Cohere's Classify API!
+# In an ideal world, I would have used a custom model (if only it came in time :3 ) 
+def classify_message(class_id, message):
+    examples = [
+        Example("Hi professor, I am still not seeing the option to regrade request, did I miss something?", "negative"),
+        Example("For 4a, why is 0 rejected? 1 zero isnt technically a seq of zeroes, and 0 < 1", "negative"),
+        Example("LETS GO", "positive"),
+        Example("yessss we love that grade ty guys! have a great summer", "positive"),
+        Example("Honestly, fuck the TA that graded q4", "negative"),
+        Example("its whtever if i pass if not then im mad lmao i just want my piece of paper", "negative"),
+        Example("fucking rip", "negative"),
+        Example("ofc!", "positive"),
+        Example("Ohh ok. Maybe I use dfa", "positive"),
+        Example("4 is driving me insane", "negative"),
+        Example("Haha oh sweet", "positive"),
+        Example("ok yeah i think that makes sense", "positive"),
+        Example("perks of a gradescope final I suppose", "positive"),
+        Example("oh wow oh god", "negative"),
+        Example("rip to whoever got screwed", "negative"),
+    ]
+    response = co.classify(inputs=[message], examples=examples)
+    db_result = supabase_db.table('class_sentiments').select("*").eq('class_id', class_id).execute()
+    result = {} # create an empty dictionary to store the results
+    for classification in response:
+        for label, label_prediction in classification.labels.items():
+            if label in ['negative', 'positive']:
+                result[label] = label_prediction.confidence
+    row = db_result.data[0]
+    for label, prediction in result.items():
+        row[label] += prediction
+        result = supabase_db.table('class_sentiments').update({label: row[label]}).eq('class_id', class_id).execute() 
+    print('Message was classified')
 
 # Return a search_index (establish the primary algorithm allowing NLP to run on the dataset)
 def create_search_index():
@@ -255,7 +284,7 @@ def extract_keywords(input):
 # Both of these resources actually use a mixture of both space and time multiplexing. Multi-core systems divide cores between threads using space multiplexing. And memory systems change allocations of memory between processes over time, achieving a form of time multiplexing.
 # """)
     
-
+# classify_message(1, "does anyone know how to do #5?")
 # extract_keywords("To determine the radius of the circle, we can identify the coefficient of the cosine and sine terms in the equation for r(t), which is 11. The center of the circle is located where the circle intersects the xy-plane, which is at (-3, 0, 0) in this case. To find the plane containing the circle, we can use the center of the circle as a point on the plane and the vector from the center to a point on the circle as a normal vector for the plane, which in this case is (0, 11, 0), so the equation of the plane is y = 0.")
 # CONSTANT_KEYWORDS = [  "coordinate plane",  "distance",  "center",  "circle",  "radius",  "integer",  "equation",  "pi",  "cosine",  "sine",  "vector",  "plane"]
 # THRESHOLD = 0.7
