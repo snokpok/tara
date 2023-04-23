@@ -1,7 +1,16 @@
 import { Knex } from 'knex';
-import { AccessToken, Artifact, ArtifactId, ArtifactType, Course, CourseId, User, UserId } from '@tara/types';
+import {
+	AccessToken,
+	Artifact,
+	ArtifactId,
+	ArtifactType,
+	Course,
+	CourseId,
+	User,
+	UserId,
+} from '@tara/types';
 import { COLNAMES, TABLENAMES, generateAccessToken, hashPwd } from './utils';
-import { ATFilterRequest, UserFilterRequest } from './daos';
+import { ATFilterRequest, ArtifactFilter, UserFilterRequest } from './daos';
 
 abstract class AbstractRepo {
 	constructor(protected readonly client: Knex) {}
@@ -91,10 +100,10 @@ export class CourseRepo extends AbstractRepo {
 		const res = await this.client
 			.select(this.colnames.id, this.colnames.name)
 			.from(this.tablename)
-			.where(this.colnames.id, '=', id)
+			.where(this.colnames.id, '=', id);
 		if (res.length === 0) return null;
 		course.artifacts = [];
-		course.id = res[0][this.colnames.id];
+		course.id = Number.parseInt(res[0][this.colnames.id]);
 		course.name = res[0][this.colnames.name];
 		return course;
 	}
@@ -103,38 +112,47 @@ export class CourseRepo extends AbstractRepo {
 		const res = await this.client
 			.select(this.colnames.id, this.colnames.name)
 			.from(this.tablename)
-			.where(this.colnames.ownerId, '=', ownerId)
+			.where(this.colnames.ownerId, '=', ownerId);
 		if (res.length === 0) return null;
 
 		const courses = res.map((el) => {
-			const course = new Course()
+			const course = new Course();
 			course.artifacts = [];
 			course.id = Number.parseInt(el[this.colnames.id]);
 			course.name = el[this.colnames.name];
-			return course
-		})
+			return course;
+		});
 		return courses;
 	}
 
 	async delete(id: CourseId): Promise<number> {
-		const deleted = await this.client.where(this.colnames.id, id).delete()
-		return deleted
+		const deleted = await this.client.where(this.colnames.id, id).delete();
+		return deleted;
 	}
 }
 
 export class ArtifactRepo extends AbstractRepo {
 	colnames = COLNAMES.artifacts;
-	tablename = TABLENAMES.artifacts
-	async create(type: ArtifactType, name: string, courseId: CourseId, parentArtifactId: ArtifactId, solution?: string): Promise<Artifact> {
+	tablename = TABLENAMES.artifacts;
+	async create(
+		type: ArtifactType,
+		name: string,
+		courseId: CourseId,
+		parentArtifactId: ArtifactId,
+		solution?: string
+	): Promise<Artifact> {
 		const art = new Artifact();
-		const res = await this.client.returning(this.colnames.id).insert({
-			[this.colnames.courseId]: courseId,
-			[this.colnames.name]: name,
-			[this.colnames.solution]: solution,
-			[this.colnames.type]: type,
-			[this.colnames.parentArtifactId]: parentArtifactId,
-		}).into(this.tablename)
-		if(res.length===0) return null;
+		const res = await this.client
+			.returning(this.colnames.id)
+			.insert({
+				[this.colnames.courseId]: courseId,
+				[this.colnames.name]: name,
+				[this.colnames.solution]: solution,
+				[this.colnames.type]: type,
+				[this.colnames.parentArtifactId]: parentArtifactId,
+			})
+			.into(this.tablename);
+		if (res.length === 0) return null;
 		art.id = Number.parseInt(res[0][this.colnames.id]);
 		art.courseId = courseId;
 		art.name = name;
@@ -143,15 +161,34 @@ export class ArtifactRepo extends AbstractRepo {
 		return art;
 	}
 
-	async get(id: ArtifactId): Promise<Artifact> {
-		const art = new Artifact();
-		const res = await this.client.select(this.colnames.courseId, this.colnames.id, this.colnames.name, this.colnames.parentArtifactId, this.colnames.solution, this.colnames.type).from(this.tablename)
-		if(res.length===0) return null;
-		art.id = res[0][this.colnames.id];
-		art.courseId = res[0][this.colnames.courseId];
-		art.name = res[0][this.colnames.name];
-		art.type = res[0][this.colnames.type]
-		art.parentId = res[0][this.colnames.parentArtifactId]
-		return art;
+	async find(filter: ArtifactFilter): Promise<Artifact[]> {
+		let q = this.client
+			.select(
+				this.colnames.courseId,
+				this.colnames.id,
+				this.colnames.name,
+				this.colnames.parentArtifactId,
+				this.colnames.solution,
+				this.colnames.type
+			).from(this.tablename);
+
+		if(filter.courseId) {
+			q = q.where(this.colnames.courseId, "=", filter.courseId);
+		}
+		if(filter.parentArtifactId) {
+			q = q.where(this.colnames.parentArtifactId, "=", filter.parentArtifactId);
+		}
+
+		let res = await q;
+		res = res.map((el) => {
+			const art = new Artifact();
+			art.id = Number.parseInt(el[this.colnames.id]);
+			art.courseId = Number.parseInt(el[this.colnames.courseId]);
+			art.name = el[this.colnames.name];
+			art.type = el[this.colnames.type];
+			art.parentId = el[this.colnames.parentArtifactId]===null ? null : Number.parseInt(el[this.colnames.parentArtifactId]);
+			return art;
+		})
+		return res;
 	}
 }

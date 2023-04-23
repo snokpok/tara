@@ -8,7 +8,7 @@ import morgan from 'morgan';
 import { Middlewares } from './mws';
 import { config } from 'dotenv';
 import cors from 'cors'
-import {ArtifactType} from '@tara/types'
+import {Artifact, ArtifactId, ArtifactType} from '@tara/types'
 
 config();
 
@@ -29,7 +29,7 @@ const app = express();
 app.use(cors())
 
 app.use(express.json());
-app.use(morgan('dev'));
+app.use(morgan("combined"));
 
 app.get("/metrics", (req,res) => {
 	return res.send("OK");
@@ -96,7 +96,7 @@ app.post('/chat', mws.authorizedFactory(), async (req, res) => {
 	}
 });
 
-app.post("/courses", async (req,res,next) => {
+app.post("/courses", mws.authorizedFactory(), async (req,res,next) => {
 	try {
 		const {name}  = req.body;
 		if(!name) {
@@ -110,51 +110,103 @@ app.post("/courses", async (req,res,next) => {
 	}
 })
 
-app.get("/courses", async (req,res) => {
-	const {userId} = await tokenRepo.findAccessToken({token: extractTokenFromAuthHeader(req.headers.authorization)})
-	const courses = await courseRepo.findByOwner(userId);
-	return res.json({data: courses})
+app.get("/courses", mws.authorizedFactory(), async (req,res, next) => {
+	try {
+		const {userId} = await tokenRepo.findAccessToken({token: extractTokenFromAuthHeader(req.headers.authorization)})
+		const courses = await courseRepo.findByOwner(userId);
+		return res.json({data: courses})
+	}catch(e) {
+		next(e);
+	}
 })
 
-app.get("/courses/:id", async (req,res) => {
-	const id = req.params.id;
-	if(!id) {
-		return res.status(400).json({error: "Must provide course ID"});
+const createArtifactTree = (artifacts: Artifact[]): Artifact[] => {
+	const map: Record<ArtifactId, Artifact> = {};
+	const adjList: Record<ArtifactId, ArtifactId[]> = {};
+	artifacts.forEach(el => {
+		map[el.id]= el;
+		adjList[el.id] = [];
+	})
+
+	artifacts.forEach((art) => {
+		if(adjList[art.parentId]) {
+			adjList[art.parentId].push(art.id);
+		}
+	})
+	
+	const tree: Artifact[] = []
+
+	artifacts.forEach((art) => {
+		if(art.parentId===null) { // start from root
+			tree.push(helper(art.id, adjList, map));
+		}
+	})
+	return tree
+}
+
+const helper = (rootId: ArtifactId, adjList: Record<ArtifactId, ArtifactId[]>, artifactMap: Record<ArtifactId, Artifact>): Artifact => {
+	const neighborArtifacts: Artifact[] = [];
+	const artifact = artifactMap[rootId];
+	if(adjList[rootId].length===0) return artifact;
+	for (const neighborId of adjList[rootId]) {
+		neighborArtifacts.push(helper(neighborId, adjList, artifactMap));
 	}
-	const numid = Number.parseInt(id);
-	if(isNaN(numid)) {
-		return res.status(400).json({error: "Invalid course ID; must be an integer"});
+	artifactMap[rootId].children = neighborArtifacts;
+	console.log(artifactMap[rootId])
+	return artifactMap[rootId];
+}
+
+app.get("/courses/:id", mws.authorizedFactory(), async (req,res,next) => {
+	try {
+		const id = req.params.id;
+		if(!id) {
+			return res.status(400).json({error: "Must provide course ID"});
+		}
+		const numid = Number.parseInt(id);
+		if(isNaN(numid)) {
+			return res.status(400).json({error: "Invalid course ID; must be an integer"});
+		}
+		const course = await courseRepo.get(numid);
+		// TODO: get artifacts tree
+		const artifacts = await artRepo.find({courseId: course.id});
+		course.artifacts = createArtifactTree(artifacts);
+		return res.json({data: course})
+	} catch(e) {
+		next(e)
 	}
-	const course = await courseRepo.get(numid);
-	return res.json({data: course})
 })
 
 
-app.post("/courses/:id/artifacts", async (req,res) => {
-	const courseId = req.params.id;
-	if(!courseId) {
-		return res.status(400).json({error: "Must provide course ID"});
-	}
-	const courseNumId = Number.parseInt(courseId);
-	if(isNaN(courseNumId)) {
-		return res.status(400).json({error: "Invalid course ID; must be an integer"});
-	}
-	const {type, name, solution, parentArtifactId} = req.body
-	if(!type || !name) {
-		return res.status(400).json({error: "Must provide type and name"});
-	}
-	// TODO: verify correct type
-	const course = courseRepo.get(courseNumId);
-	if(course===null) {
-		return res.status(404).json({error: "Course not found"});
-	}
+app.post("/courses/:id/artifacts", async (req,res,next) => {
+	try {
 
-	const parent = await artRepo.get(parentArtifactId);
-	if(parentArtifactId && parent===null) {
-		return res.status(404).json({error: "Parent not found"});
-	}
-	artRepo.create(type, name, courseNumId, parentArtifactId, solution);
-	return;
+		const courseId = req.params.id;
+		if(!courseId) {
+			return res.status(400).json({error: "Must provide course ID"});
+		}
+		const courseNumId = Number.parseInt(courseId);
+		const course = courseRepo.get(courseNumId);
+		if(course===null) {
+			return res.status(404).json({error: "Course not found"});
+		}
+		if(isNaN(courseNumId)) {
+			return res.status(400).json({error: "Invalid course ID; must be an integer"});
+		}
+		const {type, name, solution, parentArtifactId} = req.body
+		if(!type || !name) {
+			return res.status(400).json({error: "Must provide type and name"});
+		}
+		// TODO: verify correct type
+
+		if(parentArtifactId) {
+			const parent = await artRepo.find({id: Number.parseInt(parentArtifactId)});
+			if(parent.length===0) {
+				return res.status(404).json({error: "Parent not found"});
+			}
+		}
+		const {id} = await artRepo.create(type, name, courseNumId, parentArtifactId, solution);
+		return res.json({id})
+	} catch(e) {next(e)}
 })
 
 

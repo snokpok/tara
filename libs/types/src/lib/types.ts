@@ -30,6 +30,7 @@ export class Artifact {
 	name: string;
 	courseId: CourseId;
 	parentId: ArtifactId
+	children?: Artifact[];
 	constructor(){
 		this.id = -1;
 		this.type = "UNIDENTIFIED";
