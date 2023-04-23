@@ -8,13 +8,13 @@ import {
 	Textarea,
 } from '@nextui-org/react';
 import { Artifact } from '@tara/types';
-import React from 'react';
+import React, { useState } from 'react';
 import { AiFillPlusCircle, AiFillEdit } from 'react-icons/ai';
 import { apiClient } from '../common/api';
 import { useCookies } from 'react-cookie';
 
 const CourseCard = (props: { artifact: Artifact; updateTree: () => void }) => {
-	const mode = props.artifact.solution || (props.artifact.children.length>0) ? 'EDIT' : 'CREATE';
+	const [mode, setMode] = useState<"CREATE" | "EDIT">("EDIT");
 	const [visible, setVisible] = React.useState(false);
 	const [artifactInputName, setAIN] = React.useState(mode==="EDIT" ? props.artifact.name : "");
 	const [artifactInputSolution, setAIS] = React.useState(mode==="EDIT" ? props.artifact.solution : "");
@@ -92,10 +92,13 @@ const CourseCard = (props: { artifact: Artifact; updateTree: () => void }) => {
 						<Button
 							auto
 							iconRight={
-								mode === 'EDIT' ? <AiFillEdit /> : <AiFillPlusCircle />
+								<AiFillPlusCircle />
 							}
 							onPress={() => {
 								setVisible(true);
+								setMode("CREATE");
+								setAIN("");
+								setAIS("");
 							}}
 						>
 							Add
