@@ -5,7 +5,13 @@ import Navbar from '../components/navbar';
 import {APIClient} from "@tara/api-client-ts"
 const client = new APIClient("https://localhost:3333")
 
-export function Classes() {
+export async function getServerSideProps() 
+{
+	const classes = await client.getCourses();
+	return { props: { classes } };
+}
+
+export function Classes({classes}) {
 
 	const [visible, setVisible] = React.useState(false);
 	const modalHandler = () => setVisible(true);
@@ -13,6 +19,16 @@ export function Classes() {
 	const closeHandler = () => {
 		setVisible(false);
 		console.log("closed");
+	};
+
+	const createClassHandler = async(name: string) => {
+		try{
+	   		//const newClass = await client.
+		}
+		catch (error)
+		{
+			console.log(error);
+		}
 	};
 	
 	return (
@@ -22,7 +38,12 @@ export function Classes() {
 			<Text h1 size={32} color="primary" css={{margin:"10px"}}>Your Classes</Text>
 			<Text h2 css={{margin:"0px 10px 5px"}}>Spring 2023</Text>
 			<Grid.Container gap={2}>
-				<Grid css={{padding:"10px"}} xs={4}>
+				{classes.map((c) => (
+					<Grid key={c.name} css={{ padding: '10px' }} xs={4}>
+						<ClassCard headerText={c.name}/>
+					</Grid>
+				))}
+				{/* <Grid css={{padding:"10px"}} xs={4}>
 					<ClassCard></ClassCard>
 				</Grid>
 				<Grid css={{padding:"10px"}} xs={4}>
@@ -30,7 +51,8 @@ export function Classes() {
 				</Grid>
 				<Grid css={{padding:"10px"}} xs={4}>
 					<ClassCard></ClassCard>
-				</Grid>
+				</Grid> */}
+				
 			</Grid.Container>
 			<Button css={{margin: "15px 10px"}} onPress={modalHandler}>Add a course</Button>
 		</Container>
@@ -72,17 +94,14 @@ export function Classes() {
 
 		<Container css={{paddingTop: "50px"}}>
 			<Text h2 css={{margin:"0px 10px 5px"}}> Archived classes </Text>
-			<Grid.Container gap={2}>
+			{/* <Grid.Container gap={2}>
 				<Grid css={{padding:"10px"}} xs={4}>
 					<ClassCard></ClassCard>
 				</Grid>
 				<Grid css={{padding:"10px"}} xs={4}>
 					<ClassCard></ClassCard>
 				</Grid>
-				<Grid css={{padding:"10px"}} xs={4}>
-					<ClassCard></ClassCard>
-				</Grid>
-			</Grid.Container>
+			</Grid.Container> */}
 		</Container>
 		</>
 	);
