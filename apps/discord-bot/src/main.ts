@@ -40,7 +40,7 @@ client.on('messageCreate', async (message: Discord.Message<boolean>) => {
       class_id: class_id,
       message: message.content
     }
-    await axios.post('http://localhost:6363/message', params, {validateStatus: () => true});
+    let response = await axios.post('http://localhost:6363/message', params, {validateStatus: () => true});
   }
 
 	// test command to figure out what each element would mean
