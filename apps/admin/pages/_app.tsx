@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import './styles.css';
 import Navbar from '../components/navbar';
 import {APIClient} from "@tara/api-client-ts"
-const client = new APIClient("https://localhost:3333")
+const client = new APIClient("http://localhost:3333")
 
 
 const taraTheme = createTheme({

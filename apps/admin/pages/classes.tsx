@@ -3,10 +3,9 @@ import ClassCard from '../components/classcard';
 import React from "react";
 import Navbar from '../components/navbar';
 import {APIClient} from "@tara/api-client-ts"
-const client = new APIClient("https://localhost:3333")
-
 export async function getServerSideProps() 
 {
+	const client = new APIClient("http://localhost:3333")
 	const classes = await client.getCourses();
 	return { props: { classes } };
 }
