@@ -45,7 +45,7 @@ export function Analytics() {
 							padding: '0px',
 							margin: '16px 0px',	}}>
 						{Object.entries(topicFreqs).map(([key, value]) => (
-							<DataCard headerText={`${Math.round(10*value)/10}%`} id={key} key={key} />
+							<DataCard headerText={`${Math.round(10*(value as number))/10}%`} id={key} key={key} />
 						))}
 					</Container>
 					<Container css={{ padding: '0px' }}>

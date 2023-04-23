@@ -29,7 +29,6 @@ export function Classes() {
 		const token = cookies['token'];
 		apiClient.setAccessToken(token);
 		apiClient.getCourses().then((res) => {
-			console.log(res.data);
 			if(res.error) {
 				alert(res.error.error);
 			}

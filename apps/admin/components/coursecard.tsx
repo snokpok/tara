@@ -98,7 +98,22 @@ const CourseCard = (props: { artifact: Artifact; updateTree: () => void }) => {
 								setVisible(true);
 							}}
 						>
-							{mode === 'EDIT' ? 'Edit' : 'Add'}
+							Add
+						</Button>
+						<Button
+							auto
+							color="secondary"
+							iconRight={
+								<AiFillEdit />
+							}
+							onPress={() => {
+								setVisible(true);
+								setMode("EDIT")
+								setAIN(props.artifact.name)
+								setAIS(props.artifact.solution)
+							}}
+						>
+							Edit
 						</Button>
 					</Container>
 					{props.artifact.solution && <Text>has solution</Text>}

@@ -93,6 +93,8 @@ app.post('/chat', async (req, res) => {
 		return res.status(400).json({ message: 'Course not found' });
 	}
 	try {
+		const artifacts = await artRepo.find({courseId: cnid});
+		foundCourse.artifacts = createArtifactTree(artifacts);
 		const ans = await aiRepo.answerQuestion(question as string, foundCourse);
 		return res.json({ data: ans });
 	} catch (e) {
@@ -129,7 +131,7 @@ app.get('/courses', mws.authorizedFactory(), async (req, res, next) => {
 	}
 });
 
-const createArtifactTree = (artifacts: Artifact[]): Artifact[] => {
+export const createArtifactTree = (artifacts: Artifact[]): Artifact[] => {
 	const map: Record<ArtifactId, Artifact> = {};
 	const adjList: Record<ArtifactId, ArtifactId[]> = {};
 	artifacts.forEach((el) => {

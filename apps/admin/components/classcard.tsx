@@ -1,4 +1,4 @@
-import { Card, Text, Link } from '@nextui-org/react';
+import { Card, Text, Link, Container } from '@nextui-org/react';
 
 const ClassCard = ({ headerText, id }) => {
 	return (
@@ -7,12 +7,14 @@ const ClassCard = ({ headerText, id }) => {
 				<Text b>{headerText}</Text>
 			</Card.Header>
 			<Card.Footer>
-				<Link color="primary" href={`/${id}`}>
-					Visit course →
-				</Link>
-				<Link color="primary" href={`/analytics/${id}`}>
-					View analytics →
-				</Link>
+				<Container display="flex" direction="column" css={{ padding: '0px' }}>
+					<Link color="primary" href={`/${id}`}>
+						Visit course →
+					</Link>
+					<Link color="primary" href={`/analytics/${id}`}>
+						View analytics →
+					</Link>
+				</Container>
 			</Card.Footer>
 		</Card>
 	);

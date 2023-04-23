@@ -35,7 +35,6 @@ export function Analytics() {
 			if (error) {
 				alert(error);
 			}
-			console.log(data)
 			setCourse(data);
 		});
 	};
@@ -69,7 +68,7 @@ export function Analytics() {
 							padding: '0px',
 							margin: '16px 0px',	}}>
 						{Object.entries(topicFreqs).map(([topic, frequency]) => (
-							<DataCard headerText={`${Math.round(frequency*10)/10}%`} id={topic} key={topic} />
+							<DataCard headerText={`${Math.round((frequency as number)*10)/10}%`} id={topic} key={topic} />
 						))}
 					</Container>
 					<Container css={{ padding: '0px' }}>
