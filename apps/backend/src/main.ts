@@ -244,7 +244,8 @@ app.use((err, req, res, next) => {
 	console.error(err);
 	return res.status(500).json({ error: err });
 });
-
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('inspector').close()
 const port = process.env.PORT || 3333;
 app.listen(port, async () => {
 	console.log(`Listening at http://localhost:${port}`);
