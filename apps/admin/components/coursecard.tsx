@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-import { Badge, Card, Text, Link } from '@nextui-org/react';
-
-const CourseCard = () => {
-	return (
-		<Card isHoverable variant="shadow">
-			<Card.Body>
-				<Text>HW 6: Hash Tables</Text>
-				<Text>The date</Text>
-				<Badge>assignment type</Badge>
-=======
 import { Button, Card, Container, Text } from '@nextui-org/react';
 
 const CourseCard = () => {
@@ -34,7 +23,6 @@ const CourseCard = () => {
 						<Button>View analytics</Button>
 					</Container>
 				</Container>
->>>>>>> origin/coursepage
 			</Card.Body>
 		</Card>
 	);

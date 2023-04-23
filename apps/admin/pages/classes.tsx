@@ -40,6 +40,7 @@ export function Classes({ classes }) {
 					<Text h2 size={20}>
 						Spring 2023
 					</Text>
+
 					<Container
 						css={{
 							display: 'grid',
@@ -49,6 +50,9 @@ export function Classes({ classes }) {
 							margin: '16px 0px',
 						}}
 					>
+						{classes.map((c, i) => (
+							<ClassCard headerText={c.name} key={i} />
+						))}
 					</Container>
 					<Button onPress={modalHandler}>Add a course</Button>
 				</Container>
@@ -90,6 +94,19 @@ export function Classes({ classes }) {
 					</Modal.Footer>
 				</Modal>
 
+				<Container
+					css={{
+						display: 'grid',
+						gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+						gap: '16px',
+						padding: '0px',
+						margin: '16px 0px',
+					}}
+				>
+					{classes.map((c, i) => (
+						<ClassCard headerText={c.name} key={i} />
+					))}
+				</Container>
 				<Container css={{ padding: '0px' }}>
 					<Text h2 size={20}>
 						Archived classes
@@ -102,8 +119,7 @@ export function Classes({ classes }) {
 							padding: '0px',
 							margin: '16px 0px',
 						}}
-					>
-					</Container>
+					></Container>
 				</Container>
 			</Container>
 		</>
