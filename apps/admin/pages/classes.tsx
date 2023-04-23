@@ -4,9 +4,9 @@ import React from 'react';
 import Navbar from '../components/navbar';
 import { APIClient } from '@tara/api-client-ts';
 export async function getServerSideProps() {
-	const client = new APIClient('http://localhost:3333');
-	const classes = await client.getCourses();
-	return { props: { classes } };
+	// const client = new APIClient('http://localhost:3333');
+	// const classes = await client.getCourses();
+	return { props: { classes: [] } };
 }
 
 export function Classes({ classes }) {
