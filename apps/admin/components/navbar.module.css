@@ -1,7 +1,16 @@
 .navbar {
+<<<<<<< HEAD
 	display: flex;
 }
 
 .list li {
 	list-style-type: none;
+=======
+  display: flex;
+
+}
+
+.list li {
+  list-style-type: none;
+>>>>>>> origin/coursepage
 }

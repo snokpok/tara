@@ -28,85 +28,83 @@ export function Classes({ classes }) {
 
 	return (
 		<>
-			<Navbar />
-			<Container css={{ paddingTop: '50px' }}>
-				<Text h1 size={32} color="primary" css={{ margin: '10px' }}>
+			<Container
+				display="flex"
+				direction="column"
+				css={{ gap: '32px', paddingTop: '50px' }}
+			>
+				<Text h1 size={32} color="primary">
 					Your Classes
 				</Text>
-				<Text h2 css={{ margin: '0px 10px 5px' }}>
-					Spring 2023
-				</Text>
-				<Grid.Container gap={2}>
-					{classes.map((c) => (
-						<Grid key={c.name} css={{ padding: '10px' }} xs={4}>
-							<ClassCard headerText={c.name} />
-						</Grid>
-					))}
-					{/* <Grid css={{padding:"10px"}} xs={4}>
-					<ClassCard></ClassCard>
-				</Grid>
-				<Grid css={{padding:"10px"}} xs={4}>
-					<ClassCard></ClassCard>
-				</Grid>
-				<Grid css={{padding:"10px"}} xs={4}>
-					<ClassCard></ClassCard>
-				</Grid> */}
-				</Grid.Container>
-				<Button css={{ margin: '15px 10px' }} onPress={modalHandler}>
-					Add a course
-				</Button>
-			</Container>
+				<Container css={{ padding: '0px' }}>
+					<Text h2 size={20}>
+						Spring 2023
+					</Text>
+					<Container
+						css={{
+							display: 'grid',
+							gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+							gap: '16px',
+							padding: '0px',
+							margin: '16px 0px',
+						}}
+					>
+					</Container>
+					<Button onPress={modalHandler}>Add a course</Button>
+				</Container>
 
-			<Modal
-				closeButton
-				aria-labelledby="modal-title"
-				open={visible}
-				onClose={closeHandler}
-			>
-				<Modal.Header>
-					<Text> Add a class </Text>
-				</Modal.Header>
-				<Modal.Body>
-					<Input
-						clearable
-						bordered
-						fullWidth
-						color="primary"
-						size="lg"
-						placeholder="e.g CSCI270"
-					/>
-					<Input
-						clearable
-						bordered
-						fullWidth
-						color="primary"
-						size="lg"
-						placeholder="e.g Introduction to Algorithms"
-					/>
-				</Modal.Body>
-				<Modal.Footer>
-					<Button auto flat color="error" onPress={closeHandler}>
-						Cancel
-					</Button>
-					<Button auto onPress={closeHandler}>
-						Create class
-					</Button>
-				</Modal.Footer>
-			</Modal>
+				<Modal
+					closeButton
+					aria-labelledby="modal-title"
+					open={visible}
+					onClose={closeHandler}
+				>
+					<Modal.Header>
+						<Text> Add a class </Text>
+					</Modal.Header>
+					<Modal.Body>
+						<Input
+							clearable
+							bordered
+							fullWidth
+							color="primary"
+							size="lg"
+							placeholder="e.g CSCI270"
+						/>
+						<Input
+							clearable
+							bordered
+							fullWidth
+							color="primary"
+							size="lg"
+							placeholder="e.g Introduction to Algorithms"
+						/>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button auto flat color="error" onPress={closeHandler}>
+							Cancel
+						</Button>
+						<Button auto onPress={closeHandler}>
+							Create class
+						</Button>
+					</Modal.Footer>
+				</Modal>
 
-			<Container css={{ paddingTop: '50px' }}>
-				<Text h2 css={{ margin: '0px 10px 5px' }}>
-					{' '}
-					Archived classes{' '}
-				</Text>
-				{/* <Grid.Container gap={2}>
-				<Grid css={{padding:"10px"}} xs={4}>
-					<ClassCard></ClassCard>
-				</Grid>
-				<Grid css={{padding:"10px"}} xs={4}>
-					<ClassCard></ClassCard>
-				</Grid>
-			</Grid.Container> */}
+				<Container css={{ padding: '0px' }}>
+					<Text h2 size={20}>
+						Archived classes
+					</Text>
+					<Container
+						css={{
+							display: 'grid',
+							gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+							gap: '16px',
+							padding: '0px',
+							margin: '16px 0px',
+						}}
+					>
+					</Container>
+				</Container>
 			</Container>
 		</>
 	);
