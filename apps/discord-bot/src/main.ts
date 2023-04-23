@@ -33,10 +33,32 @@ client.on('messageCreate', async (message: Discord.Message<boolean>) => {
 
 	// simple ask a question, get a response
 	if (command === 'ask') {
+    const CLASS_1 = "1098718327393759303"
+    const CLASS_8 = "1099660606849695814"
 		const question = args.join(' ');
 		const params = { question: question };
-		const result = await axios.post(`http://localhost:3333/chat`, params)
-		message.reply(`${result.data.data}`);
+    let result
+    try {
+      result = await axios.post(`http://localhost:3333/chat`, params, {validateStatus: () => true});
+      console.log(result)
+    } catch (e) {
+      console.log(`Exception ${e}`)
+    }
+		await message.reply(`${result.data.data}`);
+    if(message.guild) {
+      console.log(`message.guild: ${message.guild}, message.guildId: ${message.guild.id}`)
+      const guildId = message.guild.id;
+      if (guildId === CLASS_1) {
+        const params = { solution: result.data.data, class_id: 1 }
+        const topic = await axios.post(`http://localhost:6363/topics`, params)
+        console.log('UPDATING CLASS 1 FREQUENCIES');
+      }
+      if (guildId === CLASS_8) {
+        const params = { solution: result.data.data, class_id: 8 }
+        const topic = await axios.post(`http://localhost:6363/topics`, params)
+        console.log('UPDATING CLASS 8 FREQUENCIES');
+      }
+    }
 	}
 
   // if (command === 'setupAnalytics') {

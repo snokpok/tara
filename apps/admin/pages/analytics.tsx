@@ -1,12 +1,26 @@
+import axios from 'axios';
+import {useState, useEffect} from 'react'
 import { Button, Progress, Container, Text } from '@nextui-org/react';
 import Navbar from '../components/navbar';
 import DataCard from '../components/datacard';
+
+const URL_NLP = "http://127.0.0.1:6363"
+
 export function Analytics() {
 	/*
 	 * Replace the elements below with your own.
 	 *
 	 * Note: The corresponding styles are in the ./index.css file.
 	 */
+
+	const [topicFreqs, setTF] = useState({});
+
+	useEffect(() => {
+		axios.get(`${URL_NLP}/data`).then(({data}) => {
+			const res = data.RESULT as {sentiments: Record<string,number>, frequencies: Record<string,number>}
+		})
+	});
+
 	return (
 		<>
 			<Navbar />

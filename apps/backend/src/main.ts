@@ -3,7 +3,7 @@ import knex from 'knex';
 import { ArtifactRepo, CourseRepo, TokenRepo, UserRepo } from './repo';
 import {} from '@tara/api-client-ts';
 import { extractTokenFromAuthHeader, pwdSame } from './utils';
-import { answerQuestion, getClassTopics, tokenizeQuestion } from './ai';
+import { answerQuestion, getClassTopics } from './ai';
 import morgan from 'morgan';
 import { Middlewares } from './mws';
 import { config } from 'dotenv';
@@ -81,7 +81,7 @@ app.post('/auth/login', async (req, res, next) => {
 	}
 });
 
-app.post('/chat', mws.authorizedFactory(), async (req, res) => {
+app.post('/chat', async (req, res) => {
 	const question = req.body.question;
 	const option = req.query.option;
 	if (!question) {
@@ -90,7 +90,6 @@ app.post('/chat', mws.authorizedFactory(), async (req, res) => {
 	if (!option) {
 		try {
 			const ans = await answerQuestion(question as string);
-			const tokenizedResponse = await tokenizeQuestion(question as string);
 			return res.json({ data: ans });
 		} catch (e) {
 			console.error(e);

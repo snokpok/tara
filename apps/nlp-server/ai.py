@@ -13,7 +13,7 @@ import supabase
 load_dotenv()
 
 COHERE_KEY = os.getenv('COHERE_KEY')
-url: str = os.getenv("DATABASE_URL")
+url: str = os.getenv("SUPABASE_URL")
 key: str = os.getenv("DATABASE_KEY")
 
 co = cohere.Client(COHERE_KEY)
@@ -131,9 +131,9 @@ def create_similarity_scores(class_topics, message):
     similarity_scores = cosine_similarity([message_embedding], class_topic_embeddings)[0]
     return similarity_scores
 
-def update_frequency_tracker(message):
+def update_frequency_tracker(message, class_id):
     # query = """SELECT topic_title, frequency FROM class_topics WHERE class_id = 1"""
-    result = supabase_db.table('class_topics').select("*").eq('class_id', 1).execute()
+    result = supabase_db.table('class_topics').select("*").eq('class_id', class_id).execute()
     rows = result.data
     class_topics = []
     frequency_tracker = {}
@@ -148,8 +148,9 @@ def update_frequency_tracker(message):
         frequency_tracker[topic] += score
     for title, frequency in frequency_tracker.items():
         supabase_db.table('class_topics').update({frequency: frequency}).eq('topic_title', title)
-        result = supabase_db.table('class_topics').update({'frequency': frequency}).eq('topic_title', title).execute()    
-    print(frequency_tracker)
+        result = supabase_db.table('class_topics').update({'frequency': frequency}).eq('topic_title', title).execute() 
+    return True   
+    # print(frequency_tracker)
 
 # Given a similarity matrix, determine similar clusters 
 def determine_clusters(keywords, threshold, similarity_matrix):
@@ -244,6 +245,13 @@ def extract_keywords(input):
         temperature=0.6
     )
     print(f"keywords_response: {keywords_response}")
+
+# update_frequency_tracker("""Time multiplexing involves sharing a resource by dividing access to it in time. At some time, you allow one process access to it; at a later time, you provide access to some other process. Multiplexing a single-core system is essentially done using time multiplexing.
+
+# Space multiplexing involves sharing a resource by dividing it into smaller pieces which are used concurrently. You give part of it to one process, part of it to another, and both may use it simultaneously. Memory is primarily shared using space multiplexing.
+
+# Both of these resources actually use a mixture of both space and time multiplexing. Multi-core systems divide cores between threads using space multiplexing. And memory systems change allocations of memory between processes over time, achieving a form of time multiplexing.
+# """)
     
 
 # extract_keywords("To determine the radius of the circle, we can identify the coefficient of the cosine and sine terms in the equation for r(t), which is 11. The center of the circle is located where the circle intersects the xy-plane, which is at (-3, 0, 0) in this case. To find the plane containing the circle, we can use the center of the circle as a point on the plane and the vector from the center to a point on the circle as a normal vector for the plane, which in this case is (0, 11, 0), so the equation of the plane is y = 0.")

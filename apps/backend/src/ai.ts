@@ -66,20 +66,5 @@ export const getClassTopics = async (question: string): Promise<string[]> => {
 	return [response.data.choices[0].text];
 };
 
-export const tokenizeQuestion = async (question: string) => {
-	try {
-		const response = await cohere
-			.tokenize({
-				text: question,
-			})
-			.then((result) => {
-				return result.body;
-			});
-		return response;
-	} catch (e) {
-		console.log(`Error: ${e}`);
-	}
-};
-
 //			Note: you may only choose 3 from the following topics that are most related to the question:
 //
