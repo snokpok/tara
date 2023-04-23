@@ -2,7 +2,7 @@ import { Button, Card, Container, Text } from '@nextui-org/react';
 
 const CourseCard = () => {
 	return (
-		<Card variant="shadow" css={{ borderColor: '#fff', padding: '0px' }}>
+		<Card variant="shadow" css={{ borderColor: '#fff' }}>
 			<Card.Body>
 				<Container
 					display="flex"
