@@ -1,33 +1,65 @@
 import { Button, Modal, Input, Container, Grid, Text } from '@nextui-org/react';
 import ClassCard from '../components/classcard';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navbar from '../components/navbar';
-import { APIClient } from '@tara/api-client-ts';
-export async function getServerSideProps() {
-	// const client = new APIClient('http://localhost:3333');
-	// const classes = await client.getCourses();
-	return { props: { classes: [] } };
-}
+import { apiClient } from '../common/api';
+import {useCookies} from 'react-cookie'
+import {Course} from '@tara/types'
 
-export function Classes({ classes }) {
+// export async function getServerSideProps(req,res) {
+// 	const classes = await apiClient.getCourses();
+// 	return { props: { classes } };
+// }
+
+export function Classes() {
 	const [visible, setVisible] = React.useState(false);
 	const modalHandler = () => setVisible(true);
+	const [classes, setClasses] = React.useState<Course[]>([])
+	const [createClassName, setCreateClassName] = React.useState("");
+	const [createClassDescription, setCreateClassDescription] = React.useState("");
+	const [refetchClasses, setRFC] = React.useState(false);
+
+	const [cookies, setCookie] = useCookies();
 
 	const closeHandler = () => {
 		setVisible(false);
-		console.log('closed');
 	};
 
+	const fetchUpdateClasses = () => {
+		const token = cookies['token'];
+		apiClient.setAccessToken(token);
+		apiClient.getCourses().then((res) => {
+			console.log(res.data);
+			if(res.error) {
+				alert(res.error.error);
+			}
+			setClasses(res.data);
+		})
+	}
+
+	useEffect(() => {
+		fetchUpdateClasses();
+	}, [])
+
 	const createClassHandler = async (name: string) => {
-		try {
-			//const newClass = await client.
-		} catch (error) {
-			console.log(error);
-		}
+		const token = cookies['token'];
+		apiClient.setAccessToken(token);
+		const newclass = new Course();
+		apiClient.createCourse(name).then((res) => {
+			if(res.error) {
+				alert(res.error.error);
+			}
+			newclass.id = res.id
+			fetchUpdateClasses();
+		})
+		// newclass.name = name;
+		// setClasses(prev => [...prev, newclass])
+		closeHandler();
 	};
 
 	return (
 		<>
+			<Navbar />
 			<Container
 				display="flex"
 				direction="column"
@@ -51,7 +83,7 @@ export function Classes({ classes }) {
 						}}
 					>
 						{classes.map((c, i) => (
-							<ClassCard headerText={c.name} key={i} />
+							<ClassCard headerText={c.name} key={i} id={c.id} />
 						))}
 					</Container>
 					<Button onPress={modalHandler}>Add a course</Button>
@@ -74,6 +106,8 @@ export function Classes({ classes }) {
 							color="primary"
 							size="lg"
 							placeholder="e.g CSCI270"
+							value={createClassName}
+							onChange={(e) => setCreateClassName(e.target.value)}
 						/>
 						<Input
 							clearable
@@ -88,29 +122,13 @@ export function Classes({ classes }) {
 						<Button auto flat color="error" onPress={closeHandler}>
 							Cancel
 						</Button>
-						<Button auto onPress={closeHandler}>
+						<Button auto onPress={() => createClassHandler(createClassName)}>
 							Create class
 						</Button>
 					</Modal.Footer>
 				</Modal>
 
-				<Container
-					css={{
-						display: 'grid',
-						gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-						gap: '16px',
-						padding: '0px',
-						margin: '16px 0px',
-					}}
-				>
-					{classes.map((c, i) => (
-						<ClassCard headerText={c.name} key={i} />
-					))}
-				</Container>
 				<Container css={{ padding: '0px' }}>
-					<Text h2 size={20}>
-						Archived classes
-					</Text>
 					<Container
 						css={{
 							display: 'grid',

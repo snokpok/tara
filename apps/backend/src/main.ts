@@ -9,6 +9,7 @@ import { Middlewares } from './mws';
 import { config } from 'dotenv';
 import cors from 'cors';
 import { Artifact, ArtifactId, ArtifactType } from '@tara/types';
+import cookieParser from 'cookie-parser'
 
 config();
 
@@ -26,14 +27,20 @@ const mws = new Middlewares(tokenRepo);
 
 const app = express();
 
-app.use(cors());
+app.use(cors({credentials: true, origin: 'http://127.0.0.1:4200'}));
+app.use(cookieParser());
 
 app.use(express.json());
 app.use(morgan('combined'));
+app.use((req,res,next) => {
+	console.log(req.cookies)
+	next();
+})
 
 app.get('/metrics', (req, res) => {
 	return res.send('OK');
 });
+
 
 app.post('/auth/register', async (req, res, next) => {
 	try {
@@ -62,7 +69,8 @@ app.post('/auth/login', async (req, res, next) => {
 				accessToken.value = await tokenRepo.createAccessTokenForUser(user.id);
 				accessToken.userId = user.id;
 			}
-			return res.json({
+			res.cookie("token", accessToken.value, {secure: true, httpOnly: true})
+			return res.send({
 				accessToken: accessToken.value,
 				userId: accessToken.userId,
 			});
@@ -164,7 +172,6 @@ const helper = (
 		neighborArtifacts.push(helper(neighborId, adjList, artifactMap));
 	}
 	artifactMap[rootId].children = neighborArtifacts;
-	console.log(artifactMap[rootId]);
 	return artifactMap[rootId];
 };
 
@@ -190,7 +197,7 @@ app.get('/courses/:id', mws.authorizedFactory(), async (req, res, next) => {
 	}
 });
 
-app.post('/courses/:id/artifacts', async (req, res, next) => {
+app.post('/courses/:id/artifacts', mws.authorizedFactory(), async (req, res, next) => {
 	try {
 		const courseId = req.params.id;
 		if (!courseId) {

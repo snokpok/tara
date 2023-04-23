@@ -14,6 +14,8 @@ export class APIClient {
 		this.url = url;
 		this.axios = axios.create({
 			baseURL: url,
+			withCredentials: true,
+			validateStatus: () => true,
 		});
 	}
 	setAccessToken(token: string) {
@@ -22,6 +24,8 @@ export class APIClient {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
+			withCredentials: true,
+			validateStatus: () => true,
 		});
 	}
 	async metrics(): Promise<{ error?: any }> {
@@ -47,19 +51,25 @@ export class APIClient {
 		email: string,
 		password: string
 	): Promise<{ data?: { accessToken: string; userId: string }; error?: any }> {
-		const res = await axios.post(`${this.url}/auth/login`, {
-			data: { email, password },
-		});
-		if (res.status >= 400) {
-			return { error: res.data.error };
+		try {
+			const res = await axios.post(`${this.url}/auth/login`, {
+				email,
+				password,
+			});
+			if (res.status >= 400) {
+				return { error: res.data.error };
+			}
+			return {
+				data: { accessToken: res.data.accessToken, userId: res.data.userId },
+			};
+		} catch (e: any) {
+			if (e.response.status >= 400) return { error: e.response.data };
+			return { error: 'Could not connect' };
 		}
-		return {
-			data: { accessToken: res.data.accessToken, userId: res.data.userId },
-		};
 	}
 	async createCourse(name: string): Promise<{ id?: number; error?: any }> {
-		const res = await axios.post(`${this.url}/courses`, {
-			data: { name },
+		const res = await this.axios.post(`${this.url}/courses`, {
+			name,
 		});
 		if (res.status >= 400) {
 			return { error: res.data.error };
@@ -67,21 +77,21 @@ export class APIClient {
 		return { id: res.data.id };
 	}
 	async getCourses(): Promise<{ data?: Course[]; error?: any }> {
-		const res = await axios.get(`${this.url}/courses`);
+		const res = await this.axios.get(`${this.url}/courses`);
 		if (res.status >= 400) {
 			return { error: res.data.error };
 		}
-		return { data: res.data as Course[] };
+		return { data: res.data.data as Course[] };
 	}
 	async getCourse(id: CourseId): Promise<{ data?: Course; error?: any }> {
-		const res = await axios.get(`${this.url}/courses/${id}`);
+		const res = await this.axios.get(`${this.url}/courses/${id}`);
 		if (res.status >= 400) {
 			return { error: res.data.error };
 		}
 		const course = new Course();
-		course.id = res.data.id;
-		course.artifacts = res.data.artifacts;
-		course.name = res.data.name;
+		course.id = res.data.data.id;
+		course.artifacts = res.data.data.artifacts;
+		course.name = res.data.data.name;
 		return { data: course };
 	}
 	async addCourseArtifact(
@@ -95,16 +105,14 @@ export class APIClient {
 			type: ArtifactType;
 			name: string;
 			solution?: string;
-			parentArtifactId?: string;
+			parentArtifactId?: ArtifactId;
 		}
 	): Promise<{ id?: number; error?: any }> {
-		const res = await axios.post(`${this.url}/courses/${courseId}/artifacts`, {
-			data: {
-				type,
-				name,
-				solution,
-				parentArtifactId,
-			},
+		const res = await this.axios.post(`${this.url}/courses/${courseId}/artifacts`, {
+			type,
+			name,
+			solution,
+			parentArtifactId,
 		});
 		if (res.status >= 400) {
 			return { error: res.data.error };

@@ -1,11 +1,11 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { NextUIProvider, createTheme } from '@nextui-org/react';
-import { useEffect } from 'react';
-import './styles.css';
+import { createContext, useEffect } from 'react';
 import Navbar from '../components/navbar';
+import { APIClientContext, apiClient } from '../common/api';
 import { APIClient } from '@tara/api-client-ts';
-const client = new APIClient('http://localhost:3333');
+import { CookiesProvider } from 'react-cookie';
 
 const taraTheme = createTheme({
 	type: 'light',
@@ -36,19 +36,16 @@ const taraTheme = createTheme({
 });
 
 function CustomApp({ Component, pageProps }: AppProps) {
-	useEffect(() => {
-		client.metrics().then((data) => {
-			if (data.error) {
-				console.error(data.error);
-			}
-		});
-	});
-
+	const URL = 'http://localhost:3333';
+	const apiClient = new APIClient(URL);
 	return (
-		<NextUIProvider theme={taraTheme}>
-			<Navbar />
-			<Component {...pageProps} />
-		</NextUIProvider>
+		<CookiesProvider>
+			<APIClientContext.Provider value={apiClient}>
+				<NextUIProvider theme={taraTheme}>
+					<Component {...pageProps} />
+				</NextUIProvider>
+			</APIClientContext.Provider>
+		</CookiesProvider>
 	);
 }
 
