@@ -133,6 +133,8 @@ def create_similarity_scores(class_topics, message):
 
 def update_frequency_tracker(message, class_id):
     # query = """SELECT topic_title, frequency FROM class_topics WHERE class_id = 1"""
+    if class_id == 1:
+        message = generate_context(message)
     result = supabase_db.table('class_topics').select("*").eq('class_id', class_id).execute()
     rows = result.data
     class_topics = []

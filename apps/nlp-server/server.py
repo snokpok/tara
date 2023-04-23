@@ -28,9 +28,6 @@ def get_topics():
 
 @app.route('/data', methods=['GET'])
 def get_nlp_data():
-    headers = dict(request.headers)
-    # check for api key
-    # get class_id
     response = {}
     try:
         data = get_data(8)
