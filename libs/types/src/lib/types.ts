@@ -3,6 +3,7 @@ export type ArtifactType =
 	| 'PROJECT'
 	| 'LAB'
 	| 'EXAM'
+	| "ASSIGNMENT"
 	| 'UNIDENTIFIED'; // TODO: more?
 
 export type UserId = number;
@@ -36,6 +37,7 @@ export class Artifact {
 	courseId: CourseId;
 	parentId: ArtifactId;
 	children?: Artifact[];
+	solution?: string
 	constructor() {
 		this.id = -1;
 		this.type = 'UNIDENTIFIED';

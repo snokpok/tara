@@ -8,8 +8,8 @@ import {
 	Textarea,
 } from '@nextui-org/react';
 import { Artifact } from '@tara/types';
-import React, { useState } from 'react';
-import { AiOutlinePlus, AiFillPlusCircle } from 'react-icons/ai';
+import React from 'react';
+import { AiFillPlusCircle } from 'react-icons/ai';
 import { apiClient } from '../common/api';
 import { useCookies } from 'react-cookie';
 
@@ -22,6 +22,7 @@ const CourseCard = (props: { artifact: Artifact, updateTree: () => void }) => {
 	const closeHandler = () => {
 		setVisible(false);
 		setAIN('');
+		setAIS("");
 	};
 
 	const handleSubmit = () => {
@@ -58,7 +59,7 @@ const CourseCard = (props: { artifact: Artifact, updateTree: () => void }) => {
 				>
 					<Container display="flex" direction="column">
 						<Text b>{props.artifact.name}</Text>
-						<Text size="$xs" i>
+						<Text size="$xs" i color='gray'>
 							{props.artifact.type[0].toUpperCase() +
 								props.artifact.type.substring(1).toLowerCase()}
 						</Text>
@@ -71,6 +72,7 @@ const CourseCard = (props: { artifact: Artifact, updateTree: () => void }) => {
 							}}
 						/>
 					</Container>
+					{props.artifact.solution && <Text>has solution</Text>}
 				</Container>
 				{props.artifact.children?.map((child) => (
 					<CourseCard artifact={child} key={child.id} updateTree={props.updateTree}/>

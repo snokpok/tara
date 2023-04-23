@@ -191,6 +191,7 @@ export class ArtifactRepo extends AbstractRepo {
 				el[this.colnames.parentArtifactId] === null
 					? null
 					: Number.parseInt(el[this.colnames.parentArtifactId]);
+			art.solution = el[this.colnames.solution]
 			return art;
 		});
 		return res;
