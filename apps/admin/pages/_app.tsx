@@ -1,23 +1,22 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-import { NextUIProvider, createTheme} from '@nextui-org/react';
+import { NextUIProvider, createTheme } from '@nextui-org/react';
 import { useEffect } from 'react';
 import './styles.css';
 import Navbar from '../components/navbar';
-import {APIClient} from "@tara/api-client-ts"
-const client = new APIClient("http://localhost:3333")
-
+import { APIClient } from '@tara/api-client-ts';
+const client = new APIClient('http://localhost:3333');
 
 const taraTheme = createTheme({
 	type: 'light',
 	theme: {
-	  colors: {
-		// brand colors
-		background: 'white',
-		text: '#061505',
-		primary: '#6AA638',
-		primaryBorder:'#6AA638',
-		/*primaryLight: '$green200',
+		colors: {
+			// brand colors
+			background: 'white',
+			text: '#061505',
+			primary: '#6AA638',
+			primaryBorder: '#6AA638',
+			/*primaryLight: '$green200',
 		primaryLightHover: '#6AA638',
 		primaryLightActive: '$green400',
 		primaryLightContrast: '$green600',
@@ -30,26 +29,26 @@ const taraTheme = createTheme({
   
 		gradient: 'linear-gradient(112deg, $blue100 -25%, $pink500 -10%, $purple500 80%)',
 		link: '#5E1DAD',*/
-	  },
-	  space: {},
-	  fonts: {}
-	}
-  })
+		},
+		space: {},
+		fonts: {},
+	},
+});
 
 function CustomApp({ Component, pageProps }: AppProps) {
 	useEffect(() => {
 		client.metrics().then((data) => {
-			if(data.error) {
+			if (data.error) {
 				console.error(data.error);
 			}
 		});
-	})
-	
+	});
+
 	return (
-	  <NextUIProvider theme={taraTheme}>
-		<Navbar/>
-		<Component {...pageProps} />
-	  </NextUIProvider>
+		<NextUIProvider theme={taraTheme}>
+			<Navbar />
+			<Component {...pageProps} />
+		</NextUIProvider>
 	);
 }
 

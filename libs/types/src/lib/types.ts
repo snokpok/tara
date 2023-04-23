@@ -1,4 +1,9 @@
-export type ArtifactType = 'QUESTION'| 'PROJECT'| 'LAB'| 'EXAM' | "UNIDENTIFIED"; // TODO: more?
+export type ArtifactType =
+	| 'QUESTION'
+	| 'PROJECT'
+	| 'LAB'
+	| 'EXAM'
+	| 'UNIDENTIFIED'; // TODO: more?
 
 export type UserId = number;
 export type CourseId = number;
@@ -8,18 +13,18 @@ export class User {
 	id: UserId;
 	email: string;
 	pwdhash: string;
-	constructor(){
+	constructor() {
 		this.id = -1;
-		this.email = "";
-		this.pwdhash = "";
+		this.email = '';
+		this.pwdhash = '';
 	}
 }
 
 export class AccessToken {
 	value: string;
 	userId: UserId;
-	constructor(){
-		this.value = "";
+	constructor() {
+		this.value = '';
 		this.userId = -1;
 	}
 }
@@ -29,12 +34,12 @@ export class Artifact {
 	type: ArtifactType;
 	name: string;
 	courseId: CourseId;
-	parentId: ArtifactId
+	parentId: ArtifactId;
 	children?: Artifact[];
-	constructor(){
+	constructor() {
 		this.id = -1;
-		this.type = "UNIDENTIFIED";
-		this.name = "";
+		this.type = 'UNIDENTIFIED';
+		this.name = '';
 		this.courseId = -1;
 		this.parentId = -1;
 	}
@@ -44,9 +49,9 @@ export class Course {
 	id: CourseId;
 	name: string;
 	artifacts: Artifact[];
-	constructor(){
+	constructor() {
 		this.id = -1;
-		this.name = "";
+		this.name = '';
 		this.artifacts = [];
 	}
 }

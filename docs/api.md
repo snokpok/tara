@@ -1,7 +1,8 @@
 # API docs
 
-If unauthorized: 
-  - 401 {message: "UNAUTHORIZED"}
+If unauthorized:
+
+- 401 {message: "UNAUTHORIZED"}
 
 #### Auth
 
@@ -15,9 +16,7 @@ If unauthorized:
 {email: string, password: string}
 {id: number, token: string}
 
-
 #### Chat
-
 
 **POST /chat**
 
@@ -33,20 +32,20 @@ Body:
 Response:
 {data: string}
 
-
-
 #### Assignment / admin side
 
 - Must have functionality to upload files (pset file + the real solution)
-Types of pieces:
+  Types of pieces:
 - Assignment (quiz, lab, PAs, projects)
 - Exams
 
 Ideas:
+
 1. Extract the assignments from reading the syllabus
 2. Have the admin manually enter it and maybe upload the assignment file
 
 **POST /classes**
+
 - Create a class
 
 {name: string, description: string}
@@ -54,12 +53,13 @@ Ideas:
 Response: {id: number}
 
 **GET /classes**
+
 - Get classes created
 
 Response: {id, name, description}[]
 
-
 **POST /classes/:id/artifacts?extract=BOOLEAN**
+
 - Upload an artifact for extraction if extract is `true` (e.g can upload a syllabus to extract the individual ones)
 
   ```
@@ -72,10 +72,11 @@ Response: {id, name, description}[]
 Response: {data: ClassArtifact[]}
 
 **GET /classes/:id**
+
 - Get a class details (e.g assignments)
 - Also returns the class artifacts
 
-Response: 
+Response:
 {id, name, description, artifacts: ClassArtifact[]}
 
 (the relatedAttachments is if we pursue 1) where there are rels between an
@@ -85,14 +86,13 @@ extracted artifacts and the attachments that it got detected from)
 
 **GET /analytics**
 
-- **General flow**: *question -> determine artifact (+ solution) related to question -> extract topics -> update stats -> reference solution to form hints -> response*
+- **General flow**: _question -> determine artifact (+ solution) related to question -> extract topics -> update stats -> reference solution to form hints -> response_
 
-- Some stats: 
+- Some stats:
   - Overall sentiment on the course
   - Most frustrated topics (i.e the one most asked about)
 - NOTE: stats should be recalculated every time there's a chat message per the
   general flow
-
 
 ## Storing things like questions in an exam
 
@@ -100,11 +100,10 @@ extracted artifacts and the attachments that it got detected from)
 - Our AI model would be fed this tree (which at the leaf should contain solution
   text) so that it can form hints to respond to the user
 
-
 ## Identified techs
 
 - MySQL: stores users + auth stuff, chat logs, analytics (freq count etc),
-  classes, class artifacts (assignments etc...), 
+  classes, class artifacts (assignments etc...),
   - Rough ERD being done here: https://dbdiagram.io/d/6443a4386b31947051037fc9
 - AWS S3: to store attachments for later reference and for parsing
 - read the uploaded attachments? maybe use 3rd-party PDF parsers (https://www.npmjs.com/package/pdf-parse)
@@ -115,9 +114,9 @@ extracted artifacts and the attachments that it got detected from)
 ## Some risks and privacy considerations
 
 - Prompt injection
-- Keeping hold of user chat data? 
-   - but analytics will be very high level and
-  lowest level it gets to is the frequency of the individual questions being asked
+- Keeping hold of user chat data?
+  - but analytics will be very high level and
+    lowest level it gets to is the frequency of the individual questions being asked
 
 ### Steps
 
@@ -126,9 +125,10 @@ extracted artifacts and the attachments that it got detected from)
 <!-- - [ ] (DISMISSIBLE IF WE PURSUE MANUAL ADDING) PDF extraction works (can go from user -> plain text) {3}
 - [ ] (DISMISSIBLE IF WE PURSUE MANUAL ADDING) Extracting artifacts from syllabus plaintext {6}
 - [ ] (DISMISSIBLE IF WE PURSUE MANUAL ADDING) Can extract relevant topics from syllabus plaintext {4} -->
+
 - [ ] Classifying user chat question into an artifact {4}
 - [ ] Can extract relevant topics from user chat question (would use the
-      extracted class topics from syllabus) {5}
+    extracted class topics from syllabus) {5}
 <!-- - [ ] (DISMISSIBLE IF WE PURSUE MANUAL ADDING) Can extract nested questions and solutions (an artifact tree) -->
 - [ ] Can reference existing artifacts and their solutions to form tangible hints {8}
 

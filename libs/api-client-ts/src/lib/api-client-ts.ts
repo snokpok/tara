@@ -46,14 +46,16 @@ export class APIClient {
 	async login(
 		email: string,
 		password: string
-	): Promise<{ data?: {accessToken: string, userId: string}, error?: any }> {
+	): Promise<{ data?: { accessToken: string; userId: string }; error?: any }> {
 		const res = await axios.post(`${this.url}/auth/login`, {
 			data: { email, password },
 		});
 		if (res.status >= 400) {
 			return { error: res.data.error };
 		}
-		return {data:{ accessToken: res.data.accessToken, userId: res.data.userId }};
+		return {
+			data: { accessToken: res.data.accessToken, userId: res.data.userId },
+		};
 	}
 	async createCourse(name: string): Promise<{ id?: number; error?: any }> {
 		const res = await axios.post(`${this.url}/courses`, {
@@ -64,12 +66,12 @@ export class APIClient {
 		}
 		return { id: res.data.id };
 	}
-	async getCourses(): Promise<{data?: Course[], error?: any}> {
+	async getCourses(): Promise<{ data?: Course[]; error?: any }> {
 		const res = await axios.get(`${this.url}/courses`);
 		if (res.status >= 400) {
 			return { error: res.data.error };
 		}
-		return {data: (res.data as Course[])}
+		return { data: res.data as Course[] };
 	}
 	async getCourse(id: CourseId): Promise<{ data?: Course; error?: any }> {
 		const res = await axios.get(`${this.url}/courses/${id}`);

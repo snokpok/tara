@@ -1,4 +1,4 @@
-import {ArtifactId, CourseId, UserId} from '@tara/types'
+import { ArtifactId, CourseId, UserId } from '@tara/types';
 
 export class ATFilterRequest {
 	userId?: UserId;
@@ -12,6 +12,6 @@ export class UserFilterRequest {
 
 export class ArtifactFilter {
 	courseId?: CourseId;
-	parentArtifactId?: ArtifactId
+	parentArtifactId?: ArtifactId;
 	id?: ArtifactId;
 }

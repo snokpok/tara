@@ -170,13 +170,14 @@ export class ArtifactRepo extends AbstractRepo {
 				this.colnames.parentArtifactId,
 				this.colnames.solution,
 				this.colnames.type
-			).from(this.tablename);
+			)
+			.from(this.tablename);
 
-		if(filter.courseId) {
-			q = q.where(this.colnames.courseId, "=", filter.courseId);
+		if (filter.courseId) {
+			q = q.where(this.colnames.courseId, '=', filter.courseId);
 		}
-		if(filter.parentArtifactId) {
-			q = q.where(this.colnames.parentArtifactId, "=", filter.parentArtifactId);
+		if (filter.parentArtifactId) {
+			q = q.where(this.colnames.parentArtifactId, '=', filter.parentArtifactId);
 		}
 
 		let res = await q;
@@ -186,9 +187,12 @@ export class ArtifactRepo extends AbstractRepo {
 			art.courseId = Number.parseInt(el[this.colnames.courseId]);
 			art.name = el[this.colnames.name];
 			art.type = el[this.colnames.type];
-			art.parentId = el[this.colnames.parentArtifactId]===null ? null : Number.parseInt(el[this.colnames.parentArtifactId]);
+			art.parentId =
+				el[this.colnames.parentArtifactId] === null
+					? null
+					: Number.parseInt(el[this.colnames.parentArtifactId]);
 			return art;
-		})
+		});
 		return res;
 	}
 }

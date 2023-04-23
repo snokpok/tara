@@ -1,8 +1,8 @@
 import { Button, Container, Grid, Text } from '@nextui-org/react';
 import CourseCard from '../components/coursecard';
 
-import {APIClient} from "@tara/api-client-ts"
-const client = new APIClient("https://localhost:3333")
+import { APIClient } from '@tara/api-client-ts';
+const client = new APIClient('https://localhost:3333');
 
 export function Course() {
 	return (

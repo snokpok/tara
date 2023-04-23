@@ -1,4 +1,4 @@
-import { Button,  Container, Text } from '@nextui-org/react';
+import { Button, Container, Text } from '@nextui-org/react';
 import ClassCard from '../components/classcard';
 import Navbar from '../components/navbar';
 export function Analytics() {
@@ -9,7 +9,7 @@ export function Analytics() {
 	 */
 	return (
 		<>
-			<Navbar/>
+			<Navbar />
 			<Container>
 				<Button> Refresh </Button>
 			</Container>
