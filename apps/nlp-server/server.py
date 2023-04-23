@@ -29,6 +29,7 @@ def get_topics():
 @app.route('/data', methods=['GET'])
 def get_nlp_data():
     class_id = request.args.get('class_id')
+    print(class_id)
     response = {}
     try:
         data = get_data(class_id)

@@ -20,6 +20,7 @@ export function Analytics() {
 	const { class_id } = router.query;
 
 	useEffect(() => {
+		console.log('he')
 		axios.get(`${URL_NLP}/data?class_id=${class_id}`).then(({data}) => {
 			const res = data.result as {sentiments: Record<string,number>, frequencies: Record<string,number>}
 			setTF(res['frequencies'])
@@ -45,7 +46,7 @@ export function Analytics() {
 							padding: '0px',
 							margin: '16px 0px',	}}>
 						{Object.entries(topicFreqs).map(([key, value]) => (
-							<DataCard headerText={`${Math.round(10*(value as number))/10}%`} id={key} key={key} />
+							<DataCard headerText={`${Math.round(10*value)/10}%`} id={key} key={key} />
 						))}
 					</Container>
 					<Container css={{ padding: '0px' }}>

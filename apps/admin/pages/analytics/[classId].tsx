@@ -28,15 +28,15 @@ export function Analytics() {
 
 
 	const fetchAndUpdateTree = async () => {
+		const class_id = router.query.classId as string
 		if (!class_id) return;
 		const token = cookies['token'];
 		apiClient.setAccessToken(token);
-		await apiClient.getCourse(Number.parseInt(class_id)).then(({ data, error }) => {
-			if (error) {
-				alert(error);
-			}
-			setCourse(data);
-		});
+		const {data, error} = await apiClient.getCourse(Number.parseInt(class_id));
+		if (error) {
+			alert(error);
+		}
+		setCourse(data);
 	};
 
 	useEffect(() => {
@@ -48,7 +48,7 @@ export function Analytics() {
 				setSentiments(res['sentiments'])
 			})
 		}
-	}, []);
+	}, [class_id]);
 
 	return (
 		<>
