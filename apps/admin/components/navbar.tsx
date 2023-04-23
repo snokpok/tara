@@ -20,7 +20,6 @@ const navbar = () => {
 				</Navbar.Brand>
 				<Navbar.Content enableCursorHighlight>
 					<Navbar.Link href="/classes"> Classes </Navbar.Link>
-					<Navbar.Link href="/analytics"> Analytics </Navbar.Link>
 					<Navbar.Link href=""> Log out </Navbar.Link>
 				</Navbar.Content>
 			</Navbar>
