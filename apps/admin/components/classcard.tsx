@@ -10,6 +10,9 @@ const ClassCard = ({ headerText, id }) => {
 				<Link color="primary" href={`/${id}`}>
 					Visit course →
 				</Link>
+				<Link color="primary" href={`/analytics/${id}`}>
+					View analytics →
+				</Link>
 			</Card.Footer>
 		</Card>
 	);
