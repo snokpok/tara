@@ -8,7 +8,7 @@ Tara's functionalities:
 2. Teachers can upload class resources and solutions to train Tara to imitate their real teaching assistants
 3. Our dashboard provides NLP-based data analytics based on Cohere’s Embed and Classify endpoints 
 
-Tara enriches the college education environment. We believe that every student should have an equal opportunity to discover and understand new things at every point in their educational journey. While we have opportunities to supplement our education through office hours and teaching assistants in university, a common pain point is that office hours can be inefficient and too crowded for us to access our available resources. 
+Tara enriches the college education environment. We believe that every student should have an equal opportunity to discover and understand new things at every point in their educational journey. While we can supplement our education through office hours and teaching assistants in university, a common pain point is that office hours can be inefficient and too crowded for us to access our available resources. Tara aims to fix that, eliminating the logistics and inefficiency of a middle man. 
 
 But we don't want to stop in the classroom. Learning also happens anywhere, anytime. In the future, we want to expand Tara to more platforms (Slack, Microsoft Teams, etc) and learning spaces (Coursera, the workspace, etc). 
 
