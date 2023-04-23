@@ -38,28 +38,22 @@ client.on('messageCreate', async (message: Discord.Message<boolean>) => {
 		const question = args.join(' ');
 		const params = { question: question };
     let result
-    try {
-      result = await axios.post(`http://localhost:3333/chat`, params, {validateStatus: () => true});
-      console.log(result)
-    } catch (e) {
-      console.log(`Exception ${e}`)
-    }
-		await message.reply(`${result.data.data}`);
     if(message.guild) {
-      console.log(`message.guild: ${message.guild}, message.guildId: ${message.guild.id}`)
       const guildId = message.guild.id;
       if (guildId === CLASS_1) {
-        const params = { solution: result.data.data, class_id: 1 }
-        const topic = await axios.post(`http://localhost:6363/topics`, params)
-        console.log('UPDATING CLASS 1 FREQUENCIES');
-      }
+        result = await axios.post(`http://localhost:3333/chat?courseId=1`, params, {validateStatus: () => true});
+        const topic_params = { solution: result.data.data, class_id: 1 }
+        const topic = await axios.post(`http://localhost:6363/topics`, topic_params)
+      } 
       if (guildId === CLASS_8) {
-        const params = { solution: result.data.data, class_id: 8 }
-        const topic = await axios.post(`http://localhost:6363/topics`, params)
-        console.log('UPDATING CLASS 8 FREQUENCIES');
+        result = await axios.post(`http://localhost:3333/chat?courseId=8`, params, {validateStatus: () => true});
+        const topic_params = { solution: result.data.data, class_id: 8 }
+        const topic = await axios.post(`http://localhost:6363/topics`, topic_params)
       }
+      await message.reply(`${result.data.data}`)
     }
-	}
+  }
+}
 
   // if (command === 'setupAnalytics') {
   //   const topics = []

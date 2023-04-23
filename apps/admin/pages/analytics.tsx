@@ -14,12 +14,15 @@ export function Analytics() {
 	 */
 
 	const [topicFreqs, setTF] = useState({});
+	const [sentiments, setSentiments] = useState({});
 
 	useEffect(() => {
 		axios.get(`${URL_NLP}/data`).then(({data}) => {
-			const res = data.RESULT as {sentiments: Record<string,number>, frequencies: Record<string,number>}
+			const res = data.result as {frequencies: Record<string, number>, sentiments: Record<string,number>};
+			setTF(res['frequencies']);
+			setSentiments(res['sentiments'])
 		})
-	});
+	}, []);
 
 	return (
 		<>
@@ -38,16 +41,18 @@ export function Analytics() {
 							gap: '16px',
 							padding: '0px',
 							margin: '16px 0px',	}}>
-						<DataCard headerText="78%" id="Dijkstra's Algorithm and MSTs"></DataCard>
-						<DataCard headerText="78%" id="Dijkstra's Algorithm and MSTs"></DataCard>
-						<DataCard headerText="78%" id="Dijkstra's Algorithm and MSTs"></DataCard>
-						<DataCard headerText="78%" id="Dijkstra's Algorithm and MSTs"></DataCard>
+						{Object.entries(topicFreqs).map(([key, value]) => (
+							<DataCard headerText={`${Math.round(10*value)/10}%`} id={key} key={key} />
+						))}
 					</Container>
 					<Container css={{ padding: '0px' }}>
 						<Text h2 size={20}>
 							Overall class sentiment
 						</Text>
-						<Progress color="primary" value={75}/>
+						<Progress color="primary" value={((sentiments['positive'] + 0.0)/(sentiments['negative'] + sentiments['positive']) * 100)}/>
+						<Text b>
+							Positive: {sentiments['positive']}, Negative: {sentiments['negative']} (based on general class comments)
+						</Text>
 					</Container>
 					<Button css={{ marginTop: '40px' }}> Refresh </Button>
 				</Container>
