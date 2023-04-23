@@ -28,9 +28,10 @@ def get_topics():
 
 @app.route('/data', methods=['GET'])
 def get_nlp_data():
+    class_id = request.args.get('class_id')
     response = {}
     try:
-        data = get_data(8)
+        data = get_data(class_id)
         response["result"] = data
         status = 200
     except Exception as e:

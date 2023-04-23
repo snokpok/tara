@@ -7,7 +7,7 @@ const DataCard = ({ headerText, id }) => {
 				<Text b size={36}> {headerText}</Text>
 			</Card.Header>
             <Card.Body css={{paddingTop: '0px', paddingBottom:'0px'}}>
-                <Text> of class confusions were due to </Text>
+                <Text> of course questions came from </Text>
             </Card.Body>
 			<Card.Footer css={{paddingTop: '0px'}}>
                 <Text b size={18}> {id}  </Text>

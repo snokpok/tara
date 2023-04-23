@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {useState, useEffect} from 'react'
 import { Button, Progress, Container, Text } from '@nextui-org/react';
+import { useRouter } from 'next/router';
 import Navbar from '../components/navbar';
 import DataCard from '../components/datacard';
 
@@ -15,11 +16,13 @@ export function Analytics() {
 
 	const [topicFreqs, setTF] = useState({});
 	const [sentiments, setSentiments] = useState({});
+	const router = useRouter();
+	const { class_id } = router.query;
 
 	useEffect(() => {
-		axios.get(`${URL_NLP}/data`).then(({data}) => {
-			const res = data.result as {frequencies: Record<string, number>, sentiments: Record<string,number>};
-			setTF(res['frequencies']);
+		axios.get(`${URL_NLP}/data?class_id=${class_id}`).then(({data}) => {
+			const res = data.result as {sentiments: Record<string,number>, frequencies: Record<string,number>}
+			setTF(res['frequencies'])
 			setSentiments(res['sentiments'])
 		})
 	}, []);
