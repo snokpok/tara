@@ -85,7 +85,7 @@ extracted artifacts and the attachments that it got detected from)
 
 **GET /analytics**
 
-- **General flow**: *question -> extract topics + classify question to artifact -> update stats -> reference solution to form hints -> response*
+- **General flow**: *question -> determine artifact (+ solution) related to question -> extract topics -> update stats -> reference solution to form hints -> response*
 
 - Some stats: 
   - Overall sentiment on the course

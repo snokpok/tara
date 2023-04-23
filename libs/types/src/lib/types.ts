@@ -1,6 +1,8 @@
 export type ArtifactType = 'QUESTION'| 'PROJECT'| 'LAB'| 'EXAM' | "UNIDENTIFIED"; // TODO: more?
 
 export type UserId = number;
+export type CourseId = number;
+export type ArtifactId = number;
 
 export class User {
 	id: UserId;
@@ -23,12 +25,27 @@ export class AccessToken {
 }
 
 export class Artifact {
-	id: number;
+	id: ArtifactId;
 	type: ArtifactType;
 	name: string;
+	courseId: CourseId;
+	parentId: ArtifactId
 	constructor(){
 		this.id = -1;
 		this.type = "UNIDENTIFIED";
 		this.name = "";
+		this.courseId = -1;
+		this.parentId = -1;
+	}
+}
+
+export class Course {
+	id: CourseId;
+	name: string;
+	artifacts: Artifact[];
+	constructor(){
+		this.id = -1;
+		this.name = "";
+		this.artifacts = [];
 	}
 }

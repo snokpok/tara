@@ -5,7 +5,8 @@ export const TABLENAMES = {
 	users: 'users',
 	accessTokens: 'access_tokens',
 	artifacts: "artifacts", 
-	artifactTrees: "artifact_trees"
+	artifactTrees: "artifact_trees",
+	courses: "classes",
 };
 
 export const COLNAMES = {
@@ -23,11 +24,13 @@ export const COLNAMES = {
 		type: "type",
 		name: "name",
 		solution: "solution",
+		courseId: "course_id",
+		parentArtifactId: "parent_id"
 	},
-	artifactTrees: {
+	courses: {
 		id: "id",
-		parentId: "parent_id", 
-		childId: "child_id",
+		name: "name",
+		ownerId: "owner_id",
 	}
 }
 
@@ -43,3 +46,7 @@ export const hashPwd = async (pwd: string): Promise<string> => {
 export const pwdSame = async (h: string, p: string): Promise<boolean> => {
 	return await compare(p,h);
 };
+
+export const extractTokenFromAuthHeader = (header: string) => {
+	return header.replace('Bearer','').trim();
+}

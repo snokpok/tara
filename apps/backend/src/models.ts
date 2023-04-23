@@ -1,1 +1,0 @@
-import {ArtifactType} from '@tara/types'
