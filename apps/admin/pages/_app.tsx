@@ -1,11 +1,12 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { NextUIProvider, createTheme} from '@nextui-org/react';
-import './styles.css';
-import { APIClient } from '@tara/api-client-ts';
 import { useEffect } from 'react';
+import './styles.css';
+import Navbar from '../components/navbar';
+import {APIClient} from "@tara/api-client-ts"
+const client = new APIClient("https://localhost:3333")
 
-const client = new APIClient("http://localhost:3333");
 
 const taraTheme = createTheme({
 	type: 'light',
@@ -46,6 +47,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
 	
 	return (
 	  <NextUIProvider theme={taraTheme}>
+		<Navbar/>
 		<Component {...pageProps} />
 	  </NextUIProvider>
 	);
