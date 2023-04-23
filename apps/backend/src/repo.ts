@@ -196,4 +196,8 @@ export class ArtifactRepo extends AbstractRepo {
 		});
 		return res;
 	}
+
+	async edit(id: ArtifactId, update: {name?: string, solution?: string}) {
+		await this.client.update(update).from(this.tablename).where(this.colnames.id, id)
+	}
 }

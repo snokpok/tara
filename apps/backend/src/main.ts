@@ -3,12 +3,12 @@ import knex from 'knex';
 import { ArtifactRepo, CourseRepo, TokenRepo, UserRepo } from './repo';
 import {} from '@tara/api-client-ts';
 import { extractTokenFromAuthHeader, pwdSame } from './utils';
-import { answerQuestion, getClassTopics } from './ai';
+import { AIRepository } from './ai';
 import morgan from 'morgan';
 import { Middlewares } from './mws';
 import { config } from 'dotenv';
 import cors from 'cors';
-import { Artifact, ArtifactId, ArtifactType } from '@tara/types';
+import { Artifact, ArtifactId } from '@tara/types';
 import cookieParser from 'cookie-parser'
 
 config();
@@ -22,6 +22,7 @@ const userRepo = new UserRepo(client);
 const tokenRepo = new TokenRepo(client);
 const courseRepo = new CourseRepo(client);
 const artRepo = new ArtifactRepo(client);
+const aiRepo = new AIRepository();
 
 const mws = new Middlewares(tokenRepo);
 
@@ -32,10 +33,6 @@ app.use(cookieParser());
 
 app.use(express.json());
 app.use(morgan('combined'));
-app.use((req,res,next) => {
-	console.log(req.cookies)
-	next();
-})
 
 app.get('/metrics', (req, res) => {
 	return res.send('OK');
@@ -83,26 +80,24 @@ app.post('/auth/login', async (req, res, next) => {
 
 app.post('/chat', async (req, res) => {
 	const question = req.body.question;
-	const option = req.query.option;
-	if (!question) {
-		return res.status(400).json({ message: 'Must provide question' });
+	const courseId = req.query.courseId as string;
+	if (!question || !courseId) {
+		return res.status(400).json({ message: 'Must provide question or courseId in query string' });
 	}
-	if (!option) {
-		try {
-			const ans = await answerQuestion(question as string);
-			return res.json({ data: ans });
-		} catch (e) {
-			console.error(e);
-			return res.status(500).json({ error: e });
-		}
-	} else if (option === 'TOPICS') {
-		try {
-			const ans = await getClassTopics(question as string);
-			return res.json({ data: ans });
-		} catch (e) {
-			console.error(e);
-			return res.status(500).json({ error: e });
-		}
+	const cnid =Number.parseInt(courseId);
+	if(isNaN(cnid)) {
+		return res.status(400).json({ message: 'Incorrect number course ID' });
+	}
+	const foundCourse = await courseRepo.get(cnid);
+	if(!foundCourse) {
+		return res.status(400).json({ message: 'Course not found' });
+	}
+	try {
+		const ans = await aiRepo.answerQuestion(question as string, foundCourse);
+		return res.json({ data: ans });
+	} catch (e) {
+		console.error(e);
+		return res.status(500).json({ error: e });
 	}
 });
 
@@ -187,7 +182,6 @@ app.get('/courses/:id', mws.authorizedFactory(), async (req, res, next) => {
 				.json({ error: 'Invalid course ID; must be an integer' });
 		}
 		const course = await courseRepo.get(numid);
-		// TODO: get artifacts tree
 		const artifacts = await artRepo.find({ courseId: course.id });
 		course.artifacts = createArtifactTree(artifacts);
 		return res.json({ data: course });
@@ -238,6 +232,49 @@ app.post('/courses/:id/artifacts', mws.authorizedFactory(), async (req, res, nex
 		next(e);
 	}
 });
+
+app.put('/courses/:id/artifacts/:artifactId', mws.authorizedFactory(), async (req, res, next) => {
+	try {
+		const courseId = req.params.id;
+		if (!courseId) {
+			return res.status(400).json({ error: 'Must provide course ID' });
+		}
+		const courseNumId = Number.parseInt(courseId);
+		if (isNaN(courseNumId)) {
+			return res
+				.status(400)
+				.json({ error: 'Invalid course ID; must be an integer' });
+		}
+		const course = await courseRepo.get(courseNumId);
+		if (course === null) {
+			return res.status(404).json({ error: 'Course not found' });
+		}
+
+		const {artifactId} = req.params;
+		if (!artifactId) {
+			return res.status(400).json({ error: 'Must provide artifact ID' });
+		}
+		const artNumId = Number.parseInt(artifactId);
+		if (isNaN(artNumId)) {
+			return res
+				.status(400)
+				.json({ error: 'Invalid artifact ID; must be an integer' });
+		}
+		const art = await artRepo.find({id: artNumId});
+		if (art === null) {
+			return res.status(404).json({ error: 'Artifact not found' });
+		}
+		const {name, solution} = req.body;
+		await artRepo.edit(courseNumId, 
+			{name,
+			solution}
+		);
+		return res.json({ id: artNumId });
+	} catch (e) {
+		next(e);
+	}
+});
+
 
 app.use((err, req, res, next) => {
 	console.error(err);

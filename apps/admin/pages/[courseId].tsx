@@ -32,14 +32,16 @@ export function CoursePage() {
 	const [cookies, setCookie] = useCookies();
 	const [course, setCourse] = useState<Course | null>(null);
 	const [can, setCAN] = useState<string>('');
-	const [selected, setSelected] = useState<Set<ArtifactType>>(new Set(["ASSIGNMENT"]));
+	const [selected, setSelected] = useState<Set<ArtifactType>>(
+		new Set(['ASSIGNMENT'])
+	);
+	const courseId = router.query.courseId as string;
 
 	useEffect(() => {
 		fetchAndUpdateTree();
 	}, [router.query.courseId as string]);
 
 	const fetchAndUpdateTree = () => {
-		const courseId = router.query.courseId as string;
 		if (!courseId) return;
 		const token = cookies['token'];
 		apiClient.setAccessToken(token);
@@ -52,7 +54,6 @@ export function CoursePage() {
 	};
 
 	const handleAddAssignment = () => {
-		const courseId = router.query.courseId as string;
 		if (!courseId) return;
 		const token = cookies['token'];
 		apiClient.setAccessToken(token);
@@ -71,10 +72,9 @@ export function CoursePage() {
 	};
 
 	const selectedValue = useMemo(
-		() => Array.from(selected).join(", ").replace("_", " "),
+		() => Array.from(selected).join(', ').replace('_', ' '),
 		[selected]
-	  );
-
+	);
 
 	if (course === null) {
 		return null;
@@ -115,20 +115,19 @@ export function CoursePage() {
 					onClose={() => setVisible(false)}
 				>
 					<Modal.Header>
-						<Text> Add an assignment</Text>
+						<Text> Add an assignment to {course.name}</Text>
 					</Modal.Header>
 					<Modal.Body>
-						<Container display="flex">
-							<Dropdown
-							>
+						<Container display="flex" gap={8} direction='column'>
+							<Dropdown>
 								<Dropdown.Button flat>{selectedValue}</Dropdown.Button>
 								<Dropdown.Menu
-							aria-label="Single selection actions"
-							color="secondary"
-							disallowEmptySelection
-							selectionMode="single"
-							selectedKeys={selected}
-							onSelectionChange={(s) => setSelected(s as Set<ArtifactType>)}
+									aria-label="Single selection actions"
+									color="secondary"
+									disallowEmptySelection
+									selectionMode="single"
+									selectedKeys={selected}
+									onSelectionChange={(s) => setSelected(s as Set<ArtifactType>)}
 								>
 									{typeOptions.map((t) => (
 										<Dropdown.Item key={t}>{t}</Dropdown.Item>

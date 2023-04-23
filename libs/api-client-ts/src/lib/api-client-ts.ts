@@ -136,7 +136,7 @@ export class APIClient {
 		artifactId: ArtifactId,
 		edit: Partial<Artifact>
 	): Promise<{ error?: any }> {
-		const res = await axios.put(
+		const res = await this.axios.put(
 			`${this.url}/courses/${courseId}/artifacts/${artifactId}`,
 			edit
 		);
