@@ -1,7 +1,7 @@
 import { Button, Modal, Input, Container, Grid, Text } from '@nextui-org/react';
 import ClassCard from '../components/classcard';
 import React from "react";
-
+import Navbar from '../components/navbar';
 import {APIClient} from "@tara/api-client-ts"
 const client = new APIClient("https://localhost:3333")
 
@@ -17,21 +17,22 @@ export function Classes() {
 	
 	return (
 		<>
+		<Navbar/>
 		<Container css={{paddingTop: "50px"}}>
 			<Text h1 size={32} color="primary" css={{margin:"10px"}}>Your Classes</Text>
 			<Text h2 css={{margin:"0px 10px 5px"}}>Spring 2023</Text>
 			<Grid.Container gap={2}>
-				<Grid css={{padding:"0px"}} xs={4}>
+				<Grid css={{padding:"10px"}} xs={4}>
 					<ClassCard></ClassCard>
 				</Grid>
-				<Grid css={{padding:"0px"}} xs={4}>
+				<Grid css={{padding:"10px"}} xs={4}>
 					<ClassCard></ClassCard>
 				</Grid>
-				<Grid css={{padding:"0px"}} xs={4}>
+				<Grid css={{padding:"10px"}} xs={4}>
 					<ClassCard></ClassCard>
 				</Grid>
 			</Grid.Container>
-			<Button css={{margin: "15px 0px"}} onPress={modalHandler}>Add a course</Button>
+			<Button css={{margin: "15px 10px"}} onPress={modalHandler}>Add a course</Button>
 		</Container>
 
 		<Modal closeButton
@@ -72,13 +73,13 @@ export function Classes() {
 		<Container css={{paddingTop: "50px"}}>
 			<Text h2 css={{margin:"0px 10px 5px"}}> Archived classes </Text>
 			<Grid.Container gap={2}>
-				<Grid css={{padding:"0px"}} xs={4}>
+				<Grid css={{padding:"10px"}} xs={4}>
 					<ClassCard></ClassCard>
 				</Grid>
-				<Grid css={{padding:"0px"}} xs={4}>
+				<Grid css={{padding:"10px"}} xs={4}>
 					<ClassCard></ClassCard>
 				</Grid>
-				<Grid css={{padding:"0px"}} xs={4}>
+				<Grid css={{padding:"10px"}} xs={4}>
 					<ClassCard></ClassCard>
 				</Grid>
 			</Grid.Container>

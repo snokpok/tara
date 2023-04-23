@@ -46,7 +46,6 @@ function CustomApp({ Component, pageProps }: AppProps) {
 	
 	return (
 	  <NextUIProvider theme={taraTheme}>
-		<Navbar/>
 		<Component {...pageProps} />
 	  </NextUIProvider>
 	);

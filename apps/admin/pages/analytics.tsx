@@ -1,6 +1,6 @@
 import { Button,  Container, Text } from '@nextui-org/react';
 import ClassCard from '../components/classcard';
-
+import Navbar from '../components/navbar';
 export function Analytics() {
 	/*
 	 * Replace the elements below with your own.
@@ -8,9 +8,12 @@ export function Analytics() {
 	 * Note: The corresponding styles are in the ./index.css file.
 	 */
 	return (
-		<Container>
-            <Button> Refresh </Button>
-        </Container>
+		<>
+			<Navbar/>
+			<Container>
+				<Button> Refresh </Button>
+			</Container>
+		</>
 	);
 }
 
