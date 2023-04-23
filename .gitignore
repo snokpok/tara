@@ -43,3 +43,7 @@ Thumbs.db
 
 # any env files
 /**/.env
+
+/apps/nlp-server/dataframe.txt
+/apps/nlp-server/embeds.txt
+/apps/nlp-server/test.ann
